@@ -31,3 +31,8 @@
 ## Sixth follow-up (2026-10-03) - branding and colour pass (development/11)
 - Fresh tab, full reload, clicked the ring example: hero with logo and large gradient wordmark, tinted cards, gradient bubbles, indigo source chips, teal verdict card and lavender graph panel all render; the source expander opened and showed the clause text; the verdict is a full sentence (ellipsis fixed).
 - Not verified after this pass: the other five examples, dark mode, the downloaded file. Known flaws: "Ask" button sits below each card, six cards need scrolling on a laptop, graph colours fixed for light mode.
+
+## Seventh follow-up (2026-10-03) - all examples in the branded app
+- Fresh load of the deployed branded app: six tinted cards render. Clicked Structuring (ACC-0007): Verdict + Cited, Evidence, three source expanders (POL-AML-001 Clauses 3, 2, 6), Confidence note, 34.2 s, Download finding, review line.
+- Typed in the chat box: high-risk remittance ACC-0012 (POL-AML-002 Clauses 2, 3; 34.6 s), velocity ACC-0019 (POL-AML-003 Clauses 1, 4, 6; 34.3 s), LCR (POL-LIQ-001 Clauses 2, 3, 4; 25.2 s), NPA (LN-0025 Substandard 15%, POL-CR-001 Clauses 2-5; 33.3 s). All rendered with the full layout. Ring was verified earlier in the branded app.
+- Still not verified: dark mode, downloaded file contents, expander text for these five, and the ring graph and example 4 with the final code.
