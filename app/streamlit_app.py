@@ -191,13 +191,22 @@ def split_sections(text):
 
 
 def build_summary(sections, full):
-    v = sections.get("verdict", "")
-    if v:
-        first = v.split("\n")[0].strip().lstrip("*").rstrip("*").strip()
-        if len(first) > 120:
-            first = first[:117] + "..."
-        return first
-    return full[:120].strip() + "..." if full else "No response"
+    v = sections.get("verdict", "") or full
+    if not v:
+        return "No response"
+    first = ""
+    for line in v.split("\n"):
+        line = re.sub(r"\*\*|__|`", "", line).strip()
+        line = re.sub(r"^[-*#>\s]+", "", line)
+        line = _FRAG_RE.sub("", line).lstrip(":*").strip()
+        if line:
+            first = line
+            break
+    if not first:
+        return "No response"
+    if len(first) > 120:
+        first = first[:117].rsplit(" ", 1)[0].rstrip(",;:") + "..."
+    return first
 
 
 def build_dot(ring_data):
