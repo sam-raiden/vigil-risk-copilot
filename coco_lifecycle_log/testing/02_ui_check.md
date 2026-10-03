@@ -1,0 +1,5 @@
+# Testing 02 — UI check by the user's agent in Chrome (2026-10-03)
+
+- Opened VIGIL.CORE.VIGIL_APP in Snowsight after the 1.35.0 fix: loads without error; header, six example buttons, empty Audit Panel, chat input at page bottom.
+- Typed 'Is account ACC-0031 connected to anything else?' into the chat input and submitted: the Audit Panel rendered, including a Confidence Note (cites RING-001, five members, Orion Trading Co, Clause 4.5.2 caveat, EDD status unknown, "I am a copilot and do not file anything", "No external connector is configured"), "Measured wall-clock seconds for this call: 28.4", and a "Download finding as Markdown" button.
+- Not visually confirmed (the Chrome extension and renderer were unstable, scrolling the iframe failed): the verdict block, evidence table, record ID block, policy citation boxes and the ring graph for that answer; the other five example buttons by click (button clicks by coordinate missed while the layout was reflowing); the Markdown download contents.
