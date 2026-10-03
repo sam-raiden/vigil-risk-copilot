@@ -8,60 +8,116 @@ from snowflake.snowpark.context import get_active_session
 st.set_page_config(page_title="Vigil", layout="centered")
 session = get_active_session()
 
+
+def logo_svg(size=44, uid="a"):
+    return (
+        '<svg width="' + str(size) + '" height="' + str(size) + '" viewBox="0 0 48 48" '
+        'aria-label="Vigil">'
+        '<defs><linearGradient id="vg' + uid + '" x1="0" y1="0" x2="1" y2="1">'
+        '<stop offset="0" stop-color="#4F46E5"/><stop offset="1" stop-color="#7C3AED"/></linearGradient></defs>'
+        '<path d="M24 3 L42 10 V23 C42 34 34.5 41.5 24 45 C13.5 41.5 6 34 6 23 V10 Z" fill="url(#vg' + uid + ')"/>'
+        '<path d="M12.5 24 C16 18 20 15.5 24 15.5 C28 15.5 32 18 35.5 24 C32 30 28 32.5 24 32.5 '
+        'C20 32.5 16 30 12.5 24 Z" fill="#ffffff" opacity=".95"/>'
+        '<circle cx="24" cy="24" r="5.2" fill="url(#vg' + uid + ')"/>'
+        '<circle cx="25.8" cy="22.2" r="1.6" fill="#ffffff"/></svg>'
+    )
+
+
 st.markdown("""<style>
-:root{--v-accent:#4f46e5;--v-accent-soft:rgba(79,70,229,.10);--v-accent-line:rgba(79,70,229,.28);
---v-text:inherit;--v-muted:rgba(100,100,115,.95);--v-line:rgba(120,120,135,.18);
---v-surface:rgba(120,120,135,.045);--v-surface-2:rgba(120,120,135,.08);
---v-green:#15803d;--v-green-soft:rgba(22,163,74,.10);--v-red:#b91c1c;--v-red-soft:rgba(220,38,38,.09);
---v-shadow:0 6px 20px rgba(15,15,30,.08);}
-@media (prefers-color-scheme: dark){:root{--v-accent:#818cf8;--v-accent-soft:rgba(129,140,248,.14);
---v-accent-line:rgba(129,140,248,.35);--v-muted:rgba(170,170,185,.95);--v-line:rgba(160,160,180,.20);
---v-surface:rgba(160,160,180,.06);--v-surface-2:rgba(160,160,180,.10);--v-green:#4ade80;
---v-green-soft:rgba(74,222,128,.12);--v-red:#f87171;--v-red-soft:rgba(248,113,113,.12);
---v-shadow:0 6px 20px rgba(0,0,0,.35);}}
+:root{
+--v-indigo:#4F46E5;--v-violet:#7C3AED;--v-teal:#0D9488;--v-amber:#D97706;--v-red:#DC2626;
+--v-blue:#2563EB;--v-rose:#E11D48;
+--v-grad:linear-gradient(135deg,#4F46E5 0%,#7C3AED 100%);
+--v-band:linear-gradient(120deg,rgba(79,70,229,.13) 0%,rgba(124,58,237,.11) 55%,rgba(13,148,136,.09) 100%);
+--v-muted:rgba(90,90,110,.95);--v-line:rgba(110,110,140,.20);--v-surface:rgba(110,110,140,.05);
+--v-indigo-t:rgba(79,70,229,.09);--v-violet-t:rgba(124,58,237,.09);--v-teal-t:rgba(13,148,136,.10);
+--v-amber-t:rgba(217,119,6,.11);--v-blue-t:rgba(37,99,235,.09);--v-rose-t:rgba(225,29,72,.08);
+--v-indigo-b:rgba(79,70,229,.30);--v-teal-ink:#0F766E;--v-amber-ink:#B45309;--v-indigo-ink:#4338CA;
+--v-shadow:0 10px 24px rgba(79,70,229,.14);}
+@media (prefers-color-scheme: dark){:root{
+--v-band:linear-gradient(120deg,rgba(99,102,241,.22) 0%,rgba(139,92,246,.18) 55%,rgba(20,184,166,.12) 100%);
+--v-muted:rgba(175,175,195,.95);--v-line:rgba(160,160,190,.22);--v-surface:rgba(160,160,190,.06);
+--v-indigo-t:rgba(129,140,248,.14);--v-violet-t:rgba(167,139,250,.14);--v-teal-t:rgba(45,212,191,.13);
+--v-amber-t:rgba(251,191,36,.13);--v-blue-t:rgba(96,165,250,.13);--v-rose-t:rgba(251,113,133,.13);
+--v-indigo-b:rgba(129,140,248,.45);--v-teal-ink:#2DD4BF;--v-amber-ink:#FBBF24;--v-indigo-ink:#A5B4FC;
+--v-shadow:0 10px 24px rgba(0,0,0,.40);}}
 html,body,[class*="css"],.stMarkdown,button,input,textarea{font-family:-apple-system,BlinkMacSystemFont,
 "Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif !important;}
-.block-container{max-width:820px !important;padding-top:1.6rem !important;padding-bottom:7rem !important;}
+.block-container{max-width:820px !important;padding-top:1.2rem !important;padding-bottom:7rem !important;}
 .stMarkdown p,.stMarkdown li{line-height:1.6;}
 header[data-testid="stHeader"]{background:transparent;}
-.v-head{display:flex;align-items:center;gap:12px;padding:4px 0 18px 0;}
-.v-mark{font-weight:650;font-size:1.05rem;letter-spacing:-.01em;}
-.v-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--v-accent);margin-right:8px;}
-.v-tag{color:var(--v-muted);font-size:.86rem;flex:1;}
-.v-pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.74rem;font-weight:500;
-border:1px solid var(--v-line);color:var(--v-muted);background:var(--v-surface);white-space:nowrap;}
-.v-pill.ok{color:var(--v-green);background:var(--v-green-soft);border-color:transparent;}
-.v-pill.no{color:var(--v-red);background:var(--v-red-soft);border-color:transparent;}
-.v-hero{text-align:center;padding:56px 0 28px 0;}
-.v-hero h1{font-size:2.1rem;font-weight:600;letter-spacing:-.02em;margin:0 0 8px 0;padding:0;}
-.v-hero p{color:var(--v-muted);font-size:1rem;margin:0;}
-.v-hint{color:var(--v-muted);font-size:.8rem;margin:-6px 4px 14px 4px;line-height:1.4;}
-div[data-testid="stButton"] > button{border-radius:14px;border:1px solid var(--v-line);background:var(--v-surface);
-padding:14px 16px;text-align:left;justify-content:flex-start;font-weight:550;transition:box-shadow .15s,border-color .15s;}
-div[data-testid="stButton"] > button:hover{border-color:var(--v-accent-line);box-shadow:var(--v-shadow);color:inherit;}
-div[data-testid="stButton"] > button:focus:not(:active){border-color:var(--v-accent-line);color:inherit;}
+.v-band{background:var(--v-band);border:1px solid var(--v-line);border-radius:20px;padding:18px 22px;
+display:flex;align-items:center;gap:16px;margin-bottom:14px;}
+.v-band .v-txt{flex:1;min-width:0;}
+.v-word{font-size:44px;font-weight:800;line-height:1.05;letter-spacing:-.03em;background:var(--v-grad);
+-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;}
+.v-tagline{color:var(--v-muted);font-size:.92rem;margin-top:2px;}
+.v-chips{display:flex;flex-direction:column;gap:6px;align-items:flex-end;}
+.v-chip{display:inline-block;padding:3px 11px;border-radius:999px;font-size:.74rem;font-weight:600;white-space:nowrap;}
+.v-chip.syn{background:var(--v-amber-t);color:var(--v-amber-ink);}
+.v-chip.hitl{background:var(--v-teal-t);color:var(--v-teal-ink);}
+.v-hero{text-align:center;padding:10px 0 14px 0;}
+.v-hero h2{font-size:1.45rem;font-weight:650;letter-spacing:-.01em;margin:0 0 4px 0;padding:0;}
+.v-hero p{color:var(--v-muted);font-size:.95rem;margin:0;}
+.v-card{border:1px solid var(--v-line);border-radius:16px;padding:12px 14px;margin:4px 0 4px 0;display:flex;
+gap:12px;align-items:center;transition:transform .15s,box-shadow .15s,border-color .15s;}
+.v-card:hover{transform:translateY(-2px);box-shadow:var(--v-shadow);border-color:var(--v-indigo-b);}
+.v-ico{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+font-size:19px;flex-shrink:0;}
+.v-ct{font-weight:650;font-size:.93rem;line-height:1.3;}
+.v-ch{color:var(--v-muted);font-size:.8rem;line-height:1.35;}
+.t-indigo{background:var(--v-indigo-t);} .t-indigo .v-ico{background:rgba(79,70,229,.18);}
+.t-amber{background:var(--v-amber-t);} .t-amber .v-ico{background:rgba(217,119,6,.20);}
+.t-violet{background:var(--v-violet-t);} .t-violet .v-ico{background:rgba(124,58,237,.18);}
+.t-teal{background:var(--v-teal-t);} .t-teal .v-ico{background:rgba(13,148,136,.20);}
+.t-blue{background:var(--v-blue-t);} .t-blue .v-ico{background:rgba(37,99,235,.18);}
+.t-rose{background:var(--v-rose-t);} .t-rose .v-ico{background:rgba(225,29,72,.16);}
+div[data-testid="stButton"] > button{border-radius:12px;border:1px solid var(--v-line);background:transparent;
+padding:4px 12px;min-height:0;font-size:.8rem;font-weight:600;color:var(--v-indigo-ink);margin-bottom:10px;
+transition:border-color .15s,background .15s;}
+div[data-testid="stButton"] > button:hover{border-color:var(--v-indigo-b);background:var(--v-indigo-t);color:var(--v-indigo-ink);}
+div[data-testid="stButton"] > button:focus:not(:active){border-color:var(--v-indigo-b);color:var(--v-indigo-ink);}
+div[data-testid="stDownloadButton"] > button{background:var(--v-grad) !important;color:#fff !important;border:0 !important;
+border-radius:12px;font-weight:600;transition:box-shadow .15s,transform .15s;}
+div[data-testid="stDownloadButton"] > button:hover{box-shadow:var(--v-shadow);transform:translateY(-1px);color:#fff !important;}
+div[data-testid="stDownloadButton"] > button p{color:#fff !important;}
 .v-user{display:flex;justify-content:flex-end;margin:22px 0 14px 0;}
-.v-user div{max-width:78%;background:var(--v-surface-2);border:1px solid var(--v-line);border-radius:16px 16px 4px 16px;
-padding:10px 16px;line-height:1.6;}
-.v-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--v-muted);font-weight:600;margin:18px 0 6px 0;}
-.v-verdict{font-size:1.06rem;line-height:1.6;font-weight:550;margin:2px 0 4px 0;}
+.v-user div{max-width:78%;background:var(--v-grad);color:#fff;border-radius:18px 18px 4px 18px;
+padding:10px 16px;line-height:1.6;box-shadow:0 4px 14px rgba(79,70,229,.22);}
+.v-who{display:flex;align-items:center;gap:8px;font-weight:700;font-size:.9rem;margin:6px 0 2px 0;}
+.v-label{display:flex;align-items:center;gap:8px;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;
+color:var(--v-muted);font-weight:700;margin:18px 0 6px 0;}
+.v-label i{width:8px;height:8px;border-radius:50%;display:inline-block;}
+.d-indigo{background:var(--v-indigo);} .d-violet{background:var(--v-violet);} .d-teal{background:var(--v-teal);}
+.d-amber{background:var(--v-amber);} .d-blue{background:var(--v-blue);}
+.v-verdict{border:1px solid var(--v-line);border-left:4px solid var(--v-indigo);border-radius:14px;
+padding:12px 16px;background:var(--v-indigo-t);}
+.v-verdict.ok{border-left-color:var(--v-teal);background:var(--v-teal-t);}
+.v-verdict.no{border-left-color:var(--v-amber);background:var(--v-amber-t);}
+.v-vlead{font-size:1.04rem;line-height:1.6;font-weight:600;}
 .v-body{line-height:1.6;}
 .v-body ul{margin:4px 0;padding-left:20px;}
+.v-pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.72rem;font-weight:700;
+letter-spacing:.02em;text-transform:none;}
+.v-pill.ok{background:var(--v-teal-t);color:var(--v-teal-ink);border:1px solid rgba(13,148,136,.30);}
+.v-pill.no{background:var(--v-amber-t);color:var(--v-amber-ink);border:1px solid rgba(217,119,6,.30);}
 .v-ids{margin:8px 0 4px 0;}
 .v-id{display:inline-block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.74rem;padding:1px 8px;
-margin:2px 3px 2px 0;border-radius:8px;border:1px solid var(--v-line);background:var(--v-surface);color:var(--v-muted);}
+margin:2px 3px 2px 0;border-radius:8px;border:1px solid var(--v-line);background:var(--v-violet-t);color:var(--v-muted);}
 .v-src{display:inline-flex;align-items:center;gap:6px;padding:4px 12px 4px 5px;margin:3px 6px 3px 0;border-radius:999px;
-border:1px solid var(--v-line);background:var(--v-surface);font-size:.82rem;}
+border:1px solid var(--v-indigo-b);background:var(--v-indigo-t);color:var(--v-indigo-ink);font-size:.82rem;font-weight:600;}
 .v-src b{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;
-background:var(--v-accent-soft);color:var(--v-accent);font-size:.72rem;font-weight:650;}
+background:var(--v-grad);color:#fff;font-size:.7rem;}
 div[data-testid="stExpander"] details,div[data-testid="stExpander"]{border-radius:14px !important;border-color:var(--v-line) !important;}
 div[data-testid="stExpander"] summary{font-size:.86rem;}
-div[data-testid="stGraphVizChart"]{border:1px solid var(--v-line);border-radius:16px;padding:12px;background:var(--v-surface);}
-.v-conf{color:var(--v-muted);font-size:.88rem;line-height:1.6;border-left:2px solid var(--v-line);padding-left:12px;margin-top:16px;}
+div[data-testid="stGraphVizChart"]{border:1px solid var(--v-line);border-radius:16px;padding:12px;background:var(--v-violet-t);}
+.v-conf{color:var(--v-muted);font-size:.88rem;line-height:1.6;border-left:2px solid var(--v-violet);padding-left:12px;margin-top:16px;}
 .v-foot{color:var(--v-muted);font-size:.8rem;padding-top:10px;}
 .v-review{color:var(--v-muted);font-size:.76rem;margin:4px 0 6px 0;}
 .v-sep{height:1px;background:var(--v-line);margin:26px 0 4px 0;}
-div[data-testid="stChatInput"]{border-radius:999px !important;border:1px solid var(--v-line) !important;overflow:hidden;}
+.v-brandfoot{text-align:center;color:var(--v-muted);font-size:.74rem;margin-top:28px;padding-top:10px;
+border-top:1px solid var(--v-line);}
+div[data-testid="stChatInput"]{border-radius:999px !important;border:1px solid var(--v-indigo-b) !important;overflow:hidden;}
 div[data-testid="stChatInput"] textarea{padding-left:14px !important;}
 div[data-testid="stDataFrame"]{border-radius:12px;overflow:hidden;}
 </style>""", unsafe_allow_html=True)
@@ -75,12 +131,12 @@ EXAMPLES = [
     "Which loan accounts are NPA and what provisioning is required?",
 ]
 CARDS = [
-    ("Structuring alert", "Why ACC-0007 was flagged"),
-    ("High-risk remittance", "Was ACC-0012 compliant?"),
-    ("Velocity pattern", "Pass-through on ACC-0019"),
-    ("Ring connections", "Who is ACC-0031 linked to?"),
-    ("LCR compliance", "Liquidity coverage vs floor"),
-    ("NPA provisioning", "Loans in NPA and provisions"),
+    ("Structuring alert", "Why ACC-0007 was flagged", "\U0001F6E1\uFE0F", "indigo"),
+    ("High-risk remittance", "Was ACC-0012 compliant?", "\U0001F30D", "amber"),
+    ("Velocity pattern", "Pass-through on ACC-0019", "\u26A1", "violet"),
+    ("Ring connections", "Who is ACC-0031 linked to?", "\U0001F578\uFE0F", "teal"),
+    ("LCR compliance", "Liquidity coverage vs floor", "\U0001F4A7", "blue"),
+    ("NPA provisioning", "Loans in NPA and provisions", "\U0001F4C9", "rose"),
 ]
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
@@ -297,6 +353,31 @@ def policy_note(parsed, key):
     return ""
 
 
+_SENT_RE = re.compile(r"(?<=[.!?])\s+(?=[A-Z\u20B9(])")
+
+
+def verdict_lead(sections, full):
+    v = sections.get("verdict", "") or full or ""
+    lines = []
+    for line in v.split("\n"):
+        line = re.sub(r"\*\*|__|`", "", line).strip()
+        line = re.sub(r"^[-*#>\s]+", "", line)
+        line = _FRAG_RE.sub("", line).lstrip(":*").strip()
+        if line:
+            lines.append(line)
+    if not lines:
+        return "No response", ""
+    sents = _SENT_RE.split(lines[0])
+    lead = sents[0]
+    used = 1
+    if len(lead) < 90 and len(sents) > 1:
+        lead = lead + " " + sents[1]
+        used = 2
+    rest = " ".join(sents[used:])
+    remaining = ([rest] if rest else []) + lines[1:]
+    return lead, "\n".join(remaining)
+
+
 def build_dot(ring_data):
     if not ring_data:
         return None
@@ -312,12 +393,13 @@ def build_dot(ring_data):
     title = ring.get("ring_id", "") + "  \u00b7  shared counterparty: " + ring.get("shared_link", "")
     lines = [
         "graph {",
-        '  label="' + title.replace('"', "") + '" labelloc="t" fontsize=12 fontcolor="#8b8ba0"',
+        '  label="' + title.replace('"', "") + '" labelloc="t" fontsize=12 fontcolor="#7C3AED"',
         '  fontname="Helvetica" bgcolor="transparent" pad=0.3 nodesep=0.5',
         '  node [shape=box style="rounded,filled" fontname="Helvetica" fontsize=11 '
-        'fillcolor="#eef0fb" color="#c7cbe8" fontcolor="#33334a" penwidth=1 margin="0.18,0.08"]',
-        '  edge [color="#a5a8c0" penwidth=1.2]',
-        '  "' + hub + '" [fillcolor="#4f46e5" color="#4f46e5" fontcolor="#ffffff"]',
+        'fillcolor="#EEF2FF" color="#C7D2FE" fontcolor="#312E81" penwidth=1 margin="0.18,0.08"]',
+        '  edge [color="#7C3AED" penwidth=1.4]',
+        '  "' + hub + '" [fillcolor="#4F46E5:#7C3AED" gradientangle=315 color="#6D28D9" '
+        'fontcolor="#ffffff" penwidth=1.5]',
     ]
     for e in edges:
         lines.append('  "' + e.get("account_a", "") + '" -- "' + e.get("account_b", "") + '"')
@@ -325,8 +407,13 @@ def build_dot(ring_data):
     return "\n".join(lines)
 
 
+def label(text, dot):
+    st.markdown('<div class="v-label"><i class="d-' + dot + '"></i>' + text + "</div>", unsafe_allow_html=True)
+
+
 def render_answer(idx, msg):
     p, q, secs = msg["parsed"], msg["q"], msg["secs"]
+    st.markdown('<div class="v-who">' + logo_svg(26, "m" + str(idx)) + "Vigil</div>", unsafe_allow_html=True)
     if p.get("error"):
         st.error("Agent error: " + str(p["error"]))
         return
@@ -342,16 +429,19 @@ def render_answer(idx, msg):
             why.append("no policy clause")
         pill = '<span class="v-pill no">Not citable' + (" &middot; " + " and ".join(why) if why else "") + "</span>"
 
-    st.markdown('<div class="v-label">Verdict &ensp;' + pill + "</div>", unsafe_allow_html=True)
-    st.markdown('<div class="v-verdict">' + html_mod.escape(p.get("summary", "")) + "</div>", unsafe_allow_html=True)
-    vbody = s.get("verdict", "")
-    vlines = [l for l in vbody.split("\n") if l.strip()]
-    if len(vlines) > 1:
-        st.markdown('<div class="v-body">' + md_to_html("\n".join(vlines[1:])) + "</div>", unsafe_allow_html=True)
+    st.markdown('<div class="v-label"><i class="d-indigo"></i>Verdict &ensp;' + pill + "</div>", unsafe_allow_html=True)
+    lead, more = verdict_lead(s, p.get("full_text", ""))
+    st.markdown(
+        '<div class="v-verdict ' + ("ok" if cited else "no") + '"><div class="v-vlead">'
+        + html_mod.escape(lead) + "</div>"
+        + ('<div class="v-body" style="margin-top:6px;">' + md_to_html(more) + "</div>" if more else "")
+        + "</div>",
+        unsafe_allow_html=True,
+    )
 
     ev = s.get("evidence", "")
     if ev or p.get("tables") or p.get("rids"):
-        st.markdown('<div class="v-label">Evidence</div>', unsafe_allow_html=True)
+        label("Evidence", "violet")
         if ev:
             st.markdown('<div class="v-body">' + md_to_html(ev) + "</div>", unsafe_allow_html=True)
         for tbl in p.get("tables", []):
@@ -366,7 +456,7 @@ def render_answer(idx, msg):
 
     cits = citations_of(p)
     if cits:
-        st.markdown('<div class="v-label">Sources</div>', unsafe_allow_html=True)
+        label("Sources", "blue")
         st.markdown("".join(
             '<span class="v-src"><b>' + str(i + 1) + "</b>" + html_mod.escape(c) + "</span>"
             for i, c in enumerate(cits)), unsafe_allow_html=True)
@@ -383,7 +473,7 @@ def render_answer(idx, msg):
                 if note:
                     st.caption("How it applies: " + note)
     elif p.get("search_cits"):
-        st.markdown('<div class="v-label">Sources</div>', unsafe_allow_html=True)
+        label("Sources", "blue")
         for i, c in enumerate(p["search_cits"]):
             with st.expander("[" + str(i + 1) + "]  Policy source"):
                 st.markdown(c[:600])
@@ -391,7 +481,7 @@ def render_answer(idx, msg):
     if p.get("has_ring") and p.get("ring_data"):
         dot = build_dot(p["ring_data"])
         if dot:
-            st.markdown('<div class="v-label">Account graph</div>', unsafe_allow_html=True)
+            label("Account graph", "teal")
             st.graphviz_chart(dot, use_container_width=True)
 
     conf = s.get("confidence", "")
@@ -414,26 +504,33 @@ def render_answer(idx, msg):
 
 
 st.markdown(
-    '<div class="v-head"><span class="v-mark"><span class="v-dot"></span>Vigil</span>'
-    '<span class="v-tag">Risk, fraud &amp; regulatory intelligence</span>'
-    '<span class="v-pill">Synthetic data</span></div>',
+    '<div class="v-band">' + logo_svg(52, "h")
+    + '<div class="v-txt"><div class="v-word">Vigil</div>'
+    '<div class="v-tagline">Risk, fraud and regulatory intelligence copilot</div></div>'
+    '<div class="v-chips"><span class="v-chip syn">Synthetic data</span>'
+    '<span class="v-chip hitl">Human-in-the-loop</span></div></div>',
     unsafe_allow_html=True,
 )
 
 msgs = st.session_state["messages"]
 if not msgs:
     st.markdown(
-        '<div class="v-hero"><h1>What should we look into?</h1>'
+        '<div class="v-hero"><h2>What should we look into?</h2>'
         "<p>Ask about an alert, an account, liquidity or credit. Every answer is cited.</p></div>",
         unsafe_allow_html=True,
     )
     for row in range(3):
         c1, c2 = st.columns(2, gap="small")
         for col, i in ((c1, row * 2), (c2, row * 2 + 1)):
+            title, hint, icon, tint = CARDS[i]
             with col:
-                if st.button(CARDS[i][0], key="ex_" + str(i), use_container_width=True):
+                st.markdown(
+                    '<div class="v-card t-' + tint + '"><div class="v-ico">' + icon + "</div>"
+                    '<div><div class="v-ct">' + title + '</div><div class="v-ch">' + hint + "</div></div></div>",
+                    unsafe_allow_html=True,
+                )
+                if st.button("Ask \u2192", key="ex_" + str(i), use_container_width=True):
                     st.session_state["_pending"] = EXAMPLES[i]
-                st.markdown('<div class="v-hint">' + CARDS[i][1] + "</div>", unsafe_allow_html=True)
 else:
     for idx, msg in enumerate(msgs):
         if msg["role"] == "user":
@@ -443,6 +540,11 @@ else:
                         unsafe_allow_html=True)
         else:
             render_answer(idx, msg)
+
+st.markdown(
+    '<div class="v-brandfoot">Vigil - built on Snowflake Cortex (Agents, Analyst, Search)</div>',
+    unsafe_allow_html=True,
+)
 
 user_input = st.chat_input("Ask Vigil anything about risk, fraud or compliance...")
 question = user_input or st.session_state.pop("_pending", None)

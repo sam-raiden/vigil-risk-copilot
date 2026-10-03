@@ -18,7 +18,7 @@ Signal → Evidence → Documented finding. A human signs off on every filing; n
 | VIGIL_SV | semantic view | 8 tables, 6 relationships, 8 canonical metrics, 6 verified queries |
 | RING_LOOKUP | scalar function | custom agent tool: ring neighbours and ring row for an account |
 | VIGIL_AGENT | Cortex Agent | one agent, three tools (Analyst, Search, ring lookup) |
-| VIGIL_APP | Streamlit in Snowflake | AI-assistant-style chat with inline cited answers (verdict + Cited pill, evidence, numbered source chips with clause text, confidence) + six example questions + ring graph + download |
+| VIGIL_APP | Streamlit in Snowflake | Branded AI-assistant-style chat (logo, hero, coloured cards) with inline cited answers (verdict + Cited pill, evidence, numbered source chips with clause text, confidence) + six example questions + ring graph + download |
 
 ## Seeded synthetic patterns
 

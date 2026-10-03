@@ -27,3 +27,7 @@
 ## Fifth follow-up (2026-10-03) - second redesign (development/10)
 - Fresh tab, full reload, clicked the ring example: inline answer rendered with Verdict + CITED, Evidence, edge table, source chips and expanders, ring graph (hub highlighted, edge labels gone, so the overlap flaw is fixed), Confidence note, 34.3 s, Download finding, review line.
 - Not verified after this redesign: source expanders opened, dark mode, examples 1, 2, 3, 5, 6, the downloaded file. The verdict line ended with an ellipsis.
+
+## Sixth follow-up (2026-10-03) - branding and colour pass (development/11)
+- Fresh tab, full reload, clicked the ring example: hero with logo and large gradient wordmark, tinted cards, gradient bubbles, indigo source chips, teal verdict card and lavender graph panel all render; the source expander opened and showed the clause text; the verdict is a full sentence (ellipsis fixed).
+- Not verified after this pass: the other five examples, dark mode, the downloaded file. Known flaws: "Ask" button sits below each card, six cards need scrolling on a laptop, graph colours fixed for light mode.
