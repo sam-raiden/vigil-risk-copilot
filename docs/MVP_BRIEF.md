@@ -33,7 +33,7 @@ Every Snowflake object was generated and executed through CoCo in Snowsight, and
 Small synthetic dataset (hundreds of transactions); hub threshold tuned on one seeded case; exact-name entity matching only; no device attribute (counterparty and a 72-hour window only); no EDD record table so EDD status is "unknown"; no live regulatory feed; no second agent or external connector (so no Slack/Jira; nothing posts externally); the app runs inside Snowflake and needs a login; a human signs off on every filing.
 
 ## Links (to fill after publishing)
-- Public GitHub repository: TBD
+- Public GitHub repository: https://github.com/sam-raiden/vigil-risk-copilot
 - Deployed prototype: Snowsight > Projects > Streamlit > VIGIL.CORE.VIGIL_APP (requires Snowflake login; not publicly reachable)
 - Public demo view link: TBD (needs a screen recording or a public viewer; not produced yet)
 - Presentation: `docs/Vigil_deck.pptx`
