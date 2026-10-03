@@ -2,7 +2,7 @@
 
 Record in Snowsight with VIGIL_APP open. The agent takes 20–35 s per answer in my measured runs, so talk over the wait or cut it.
 
-1. **Setup (20 s).** "All data is synthetic. Vigil answers compliance questions with a record ID and a policy clause, or says it cannot."
+1. **Setup (20 s).** Open on the branded landing view (logo, gradient "Vigil" wordmark, tinted example cards). "All data is synthetic. Vigil answers compliance questions with a record ID and a policy clause, or says it cannot."
 2. **Look clean (30 s).** In a SQL tab show ACC-0031..0035: five small transfers (INR 8–15k), none flagged. "No per-transaction rule fires on any of these."
 3. **The ring (60 s).** Click "Is account ACC-0031 connected to anything else?" → wait → the answer shows RING-001, five members, Orion Trading Co, TXN-000609..613, POL-AML-001 Clause 4, the ring graph; open a Sources expander to show the quoted clause. Say: "The graph found what no single transaction shows. The confidence note says what the data cannot establish."
 4. **Noise control (30 s).** Type "Is account ACC-0040 connected to anything else?" → no ring. "ACC-0040 paid the electricity board, which 25 accounts paid; the hub filter excludes it."
