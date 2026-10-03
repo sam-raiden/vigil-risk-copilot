@@ -19,3 +19,7 @@
 - Example 6 (NPA) CONFIRMED in the redesigned app: LN-0025, 120 days past due, Substandard, 15% x INR 2,500,000 = INR 375,000, POL-CR-001 Clauses 2-5, 23.1 s measured. Re-checked after the polish patch (see development/09).
 - Example 3 citation gap is fixed at the agent level (cites POL-AML-003 with clause numbers, per development/08).
 - Now confirmed in the app: examples 1, 2, 3, 5, 6 (plus the ring question by typing). Example 4 was seen working earlier; the ring graph in the redesigned layout has not been re-checked.
+
+## Fourth follow-up (2026-10-03) - ring graph in the redesigned app
+- Clicked the ring example in the deployed app after a full reload: the graph card renders RING-001 (ACC-0031 linked to ACC-0032..0035, title "RING-001: Orion Trading Co"), the Confidence card cites POL-AML-001 Clause 4.5.2 and says a human must sign off, 30.2 s measured, download button present.
+- Cosmetic flaw seen: the four edge labels "Orion Trading Co" overlap each other. Not fixed. Only the lower half of the panel was viewed in this check (graph and confidence), not the verdict and evidence cards.
