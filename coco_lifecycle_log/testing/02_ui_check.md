@@ -13,3 +13,9 @@
 - Example 3 'Show me the velocity pattern on account ACC-0019.' — CONFIRMED in the app. Cites Clause 2.1 (deposit >= INR 5,00,000, >= 80% out within 24 h; ACC-0019: INR 750,000, 86.7%), Clause 1.1, Clause 4.1; "Measured wall-clock seconds for this call: 31.9"; download button present. Weakness seen: the agent wrote that the search results gave clause text/numbers but no document ID, so it cited clause numbers only (it did not name POL-AML-003). The PRD asks for document + clause, so this is a partial miss on citation format.
 - Examples 5 (LCR) and 6 (NPA): NOT confirmed in the UI. Clicks were sent (example 5 twice) but the browser stayed frozen/garbled and no answer was ever seen. Cause is the automation environment: by then five Snowsight tabs were open and the Chrome extension kept disconnecting. No claim is made about these two in the app; they remain verified only through the backend test pass (S5, S6).
 - Side effect: four orphaned Snowsight tabs showing the app are still open in the user's Chrome (they could not be closed after the tab group dissolved).
+
+## Third follow-up (2026-10-03, after the citation fix and UI redesign) - examples 5 and 6
+- Example 5 (LCR) CONFIRMED in the redesigned app: verdict compliant today with a breach on 2026-09-17; policy cards badge POL-LIQ-001 Clauses 3, 4, 5.
+- Example 6 (NPA) CONFIRMED in the redesigned app: LN-0025, 120 days past due, Substandard, 15% x INR 2,500,000 = INR 375,000, POL-CR-001 Clauses 2-5, 23.1 s measured. Re-checked after the polish patch (see development/09).
+- Example 3 citation gap is fixed at the agent level (cites POL-AML-003 with clause numbers, per development/08).
+- Now confirmed in the app: examples 1, 2, 3, 5, 6 (plus the ring question by typing). Example 4 was seen working earlier; the ring graph in the redesigned layout has not been re-checked.

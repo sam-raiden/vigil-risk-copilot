@@ -18,7 +18,7 @@ Signal → Evidence → Documented finding. A human signs off on every filing; n
 | VIGIL_SV | semantic view | 8 tables, 6 relationships, 8 canonical metrics, 6 verified queries |
 | RING_LOOKUP | scalar function | custom agent tool: ring neighbours and ring row for an account |
 | VIGIL_AGENT | Cortex Agent | one agent, three tools (Analyst, Search, ring lookup) |
-| VIGIL_APP | Streamlit in Snowflake | chat + audit panel + six example questions + ring graph + download |
+| VIGIL_APP | Streamlit in Snowflake | chat + card-style audit panel (verdict, evidence, policy citations with document IDs, confidence) + six example questions + ring graph + download |
 
 ## Seeded synthetic patterns
 
@@ -40,11 +40,11 @@ Measured on the seeded data (from the CoCo run in `coco_lifecycle_log/developmen
 
 ## Built through CoCo
 
-Every artifact was generated and executed by Snowflake's CoCo (Cortex Code) in Snowsight. Prompts and result summaries per phase are in [`coco_lifecycle_log/`](coco_lifecycle_log/) (planning, development, execution, testing). Full transcripts live in the Snowsight CoCo chat history; the logs here are the exact prompts plus summarized results, not complete transcripts. `policies/` holds the six policy documents and `policies/_clauses.psv` the flattened clause rows loaded into `POLICY_CLAUSES`.
+Every artifact was generated and executed by Snowflake's CoCo (Cortex Code) in the Snowsight panel. The Cortex Code CLI was installed locally but could not be connected, so it was not used. Prompts and result summaries per phase are in [`coco_lifecycle_log/`](coco_lifecycle_log/) (planning, development, execution, testing). Full transcripts live in the Snowsight CoCo chat history; the logs here are the exact prompts plus summarized results, not complete transcripts. `policies/` holds the six policy documents and `policies/_clauses.psv` the flattened clause rows loaded into `POLICY_CLAUSES`.
 
 ## Test results (CoCo scripted pass, 2026-10-03)
 
-10 single-turn agent calls, wall-clock seconds measured with Python `time.time()` around the agent call (n = 1 each, not averages): S1 structuring 31.0, S2 high-risk remittance 32.8, S3 velocity 31.5, S4 ring 32.6, S5 LCR 29.2, S6 NPA 21.4, A1 ambiguous 5.7 (asked which account), U1 utility payer 33.3 (no ring), X1 Slack-post request 7.9 (declined: no external connector), X2 near-miss loan LN-0033 23.6 (not an NPA). 9 clean passes, 1 with a caveat: the X2 answer cited its clause only through search annotations, not by number in the text. Details and caveats: [`coco_lifecycle_log/testing/`](coco_lifecycle_log/testing/). The UI was opened and exercised for the ring question (28.4 s measured in-app); other UI paths were not all visually confirmed.
+10 single-turn agent calls, wall-clock seconds measured with Python `time.time()` around the agent call (n = 1 each, not averages): S1 structuring 31.0, S2 high-risk remittance 32.8, S3 velocity 31.5, S4 ring 32.6, S5 LCR 29.2, S6 NPA 21.4, A1 ambiguous 5.7 (asked which account), U1 utility payer 33.3 (no ring), X1 Slack-post request 7.9 (declined: no external connector), X2 near-miss loan LN-0033 23.6 (not an NPA). 9 clean passes, 1 with a caveat: the X2 answer cited its clause only through search annotations, not by number in the text. Details and caveats: [`coco_lifecycle_log/testing/`](coco_lifecycle_log/testing/). Later fixes: the agent now cites policy document ID plus clause (e.g. POL-AML-003 Clause 2), and the app was redesigned (cards, Cited / Not citable chip, document-ID badges). In the app, examples 1, 2, 3, 5 and 6 and the typed ring question were confirmed by clicking; the ring graph in the redesigned layout was not re-checked. Known cosmetic flaw: the one-line chat summary can truncate mid-bold.
 
 ## Honest limits
 

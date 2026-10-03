@@ -14,7 +14,7 @@ One Cortex Agent has three tools (analytics over a semantic view with six verifi
 Signal → Evidence → Documented finding. A human signs off on every filing; nothing acts unasked.
 
 ## How CoCo was used (all four phases)
-Every Snowflake object was generated and executed through CoCo in Snowsight, and prompts plus result summaries are logged in `coco_lifecycle_log/`: planning (ontology, metrics, workflow), development (synthetic data, Dynamic Tables, policy table and Cortex Search, semantic view with verified queries, ring-lookup tool, agent, Streamlit app and its fix), execution (end-to-end deployment) and testing (ten scripted agent calls with measured timings). Honest note: the logs are exact prompts plus summarized results, not full transcripts.
+Every Snowflake object was generated and executed through CoCo in the Snowsight panel (the CLI was installed but could not be connected, so it was not used), and prompts plus result summaries are logged in `coco_lifecycle_log/`: planning (ontology, metrics, workflow), development (synthetic data, Dynamic Tables, policy table and Cortex Search, semantic view with verified queries, ring-lookup tool, agent, Streamlit app, its fix, a citation fix so every policy citation names its document, and a UI redesign), execution (end-to-end deployment) and testing (ten scripted agent calls with measured timings). Honest note: the logs are exact prompts plus summarized results, not full transcripts.
 
 ## Measured results
 - Ring detection on the seeded data: 2,436 candidate edges without the hub filter, 10 with it, exactly one ring (RING-001, ACC-0031..0035). Threshold 8 sits in the gap between 5 (ring counterparty) and 25 (utility); tuned on this one synthetic case.
@@ -26,7 +26,7 @@ Every Snowflake object was generated and executed through CoCo in Snowsight, and
 - **Agent tool types:** the first RING_LOOKUP was a table function; Cortex Agents call generic tools as scalar functions, so it was rebuilt as a scalar function returning an OBJECT.
 - **Dynamic Tables cannot recurse:** connected components use five unrolled min-label-propagation steps (correct for components of diameter ≤ 5).
 - **App crashed on first open:** the first Streamlit build used a call the Snowflake runtime did not support (`container(height=...)`). CoCo had only tested the agent backend, not the UI; this was caught by opening the app, fixed through CoCo, and the fix pins Streamlit 1.35.0.
-- **Browser automation was unstable** with Snowsight's heavy pages, so some UI checks could not be completed visually (see `coco_lifecycle_log/testing/02_ui_check.md`).
+- **Browser automation was unstable** with Snowsight's heavy pages, so UI checks took several attempts; examples 1, 2, 3, 5, 6 were finally confirmed by clicking (see `coco_lifecycle_log/testing/02_ui_check.md`).
 - **Accidental setting:** "Always allow ALTER" was enabled in the CoCo chat by mistake; all later prompts were scoped to VIGIL objects.
 
 ## Honest limits

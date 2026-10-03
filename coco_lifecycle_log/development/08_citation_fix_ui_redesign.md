@@ -1,0 +1,20 @@
+# Development 08 — Agent citation fix and UI redesign
+
+Tool: Cortex Code in Snowsight (the Snowsight CoCo panel). The Cortex Code CLI (v1.1.87) was installed locally, but connecting it failed (connection could not be saved), so it was not used for any step. Nothing in this log came from the CLI.
+
+## Prompt (exact, abridged only where marked)
+Two changes, both only in VIGIL.CORE.
+PART 1, agent citation fix. In the live app the agent cited clause numbers without the policy document (e.g. wrote 'Clause 2.1' and said the search results had no document ID). Fix VIGIL_AGENT: (a) make sure the policy_search tool returns the columns CITATION, DOC_ID, CLAUSE_NO, CLAUSE_TITLE, (b) add to the response instructions: "Every policy citation must be written as the document ID followed by the clause, exactly as in the CITATION column ... and quote the clause text. Never cite a clause number without its document ID." Keep all other instructions unchanged. Re-run S3 and S6 and show each citation now names the document. Report honestly if it still fails.
+PART 2, UI redesign of VIGIL_APP: polished compliance product, same PRD behaviour, Streamlit 1.35.0 constraints (no container height, no material icons, no hide_index), light/dark safe CSS, slim header with "Synthetic data" chip, example chips, one-line chat summaries, audit panel split into Verdict / Evidence / Policy citation / Confidence cards, Cited / Not citable chip, ring graph only for ring questions, measured-seconds label, markdown download, human-review banner, st.status while running, empty state, fallback to full text if sections cannot be parsed. Test the parsing helpers on saved real S3/S6 responses, compile, redeploy, verify by stage readback, say honestly what could not be verified, print the final file. (Full prompt text is in the Snowsight chat history.)
+
+## CoCo result
+- Part 1: policy_search already exposed DOC_ID, CITATION, CLAUSE_NO, CLAUSE_TITLE; the missing piece was instructions, so CoCo recreated VIGIL_AGENT with `columns_and_descriptions` for the search tool and the citation-format sentence. Re-test with real agent calls: S3 now cites POL-AML-003 Clause 2 / 4 / 6; S6 now cites POL-CR-001 Clause 2 / 3 / 4 / 5 (before: bare "Clause 2.1"). One S3 retry was needed because of a transient auth error on the analyst/ring tools.
+- Part 2: CoCo wrote the new streamlit_app.py, ran the parsing helpers against the saved S3v3 and S6v2 responses with no exceptions, compiled it, uploaded it, recreated VIGIL_APP and read the staged file back (15,876 bytes; no container(height=, no :material/, no hide_index; verdict/policy card CSS, Cited and Not citable chips, DOC_ID badge, graphviz, footer banner and st.status all present). CoCo said it could not render the UI.
+- Re-run of the 10 scripted tests after the fix: 10/10 pass on seeded facts. Two harness false negatives (Indian lakh notation, date regex) were corrected after manual inspection. X2 still cites its clause mainly via search annotations rather than by number in the text.
+
+## What I (Claude Code) checked afterwards
+- Opened the redeployed app in Snowsight: renders without crashing; header, example chips, empty state, green Cited chip, Verdict and Evidence cards, one-line chat summary and POL-LIQ-001 policy cards all show.
+- Clicked example 5 (LCR): verdict says compliant today with a breach on 2026-09-17; policy cards badge POL-LIQ-001 Clauses 3, 4, 5.
+- Clicked example 6 (NPA): LN-0025, 120 days past due, Substandard, provision INR 375,000.
+- Visual issues seen: cards show raw markdown (bullets and ** run together), a stray "(record IDs, amounts, dates):**" fragment at the top of the Evidence card, and a doubled dash in policy cards. A follow-up patch was requested (fixed in 09).
+- app/streamlit_app.py in this repo was reconstructed from the code CoCo printed (the page text lost indentation, which I restored by hand); it compiles and is within 5 bytes of the 15,876-byte staged file. The staged file in Snowflake is the authoritative copy.
