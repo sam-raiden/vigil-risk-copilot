@@ -1,39 +1,70 @@
 import streamlit as st
-import json, time, re, html as html_mod
+import json, time, re, html
+html_mod = html
 import pandas as pd
 from datetime import datetime, timezone
 from snowflake.snowpark.context import get_active_session
 
-st.set_page_config(page_title="Vigil", layout="wide")
+st.set_page_config(page_title="Vigil", layout="centered")
 session = get_active_session()
 
-CARD = (
-    "border-radius:8px;padding:16px 18px;margin-bottom:12px;"
-    "border:1px solid rgba(128,128,128,.2);background:rgba(128,128,128,.06);"
-)
-st.markdown(
-    "<style>"
-    ".vcard{" + CARD + "}"
-    ".vcard-verdict{" + CARD + "border-left:4px solid rgba(128,128,128,.35);}"
-    ".vcard-verdict.cited{border-left-color:#2ea043;}"
-    ".vcard-verdict.notcitable{border-left-color:#da3633;}"
-    ".vcard-policy{" + CARD + "border-left:3px solid rgba(59,130,246,.5);}"
-    ".vcard-conf{" + CARD + "opacity:.85;font-size:.92em;}"
-    ".chip{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.78em;"
-    "margin:2px 3px;}"
-    ".chip-green{background:rgba(46,160,67,.15);color:#2ea043;border:1px solid rgba(46,160,67,.3);}"
-    ".chip-red{background:rgba(218,54,51,.12);color:#da3633;border:1px solid rgba(218,54,51,.3);}"
-    ".chip-blue{background:rgba(59,130,246,.12);color:#3b82f6;border:1px solid rgba(59,130,246,.3);}"
-    ".chip-gray{background:rgba(128,128,128,.12);color:inherit;border:1px solid rgba(128,128,128,.25);}"
-    ".pill{display:inline-block;padding:1px 8px;border-radius:10px;font-size:.72em;"
-    "font-family:monospace;margin:1px 2px;background:rgba(128,128,128,.10);"
-    "border:1px solid rgba(128,128,128,.2);}"
-    ".footer-banner{text-align:center;padding:8px;font-size:.82em;opacity:.7;"
-    "border-top:1px solid rgba(128,128,128,.2);margin-top:16px;}"
-    ".summary-line{font-size:.9em;opacity:.8;}"
-    "</style>",
-    unsafe_allow_html=True,
-)
+st.markdown("""<style>
+:root{--v-accent:#4f46e5;--v-accent-soft:rgba(79,70,229,.10);--v-accent-line:rgba(79,70,229,.28);
+--v-text:inherit;--v-muted:rgba(100,100,115,.95);--v-line:rgba(120,120,135,.18);
+--v-surface:rgba(120,120,135,.045);--v-surface-2:rgba(120,120,135,.08);
+--v-green:#15803d;--v-green-soft:rgba(22,163,74,.10);--v-red:#b91c1c;--v-red-soft:rgba(220,38,38,.09);
+--v-shadow:0 6px 20px rgba(15,15,30,.08);}
+@media (prefers-color-scheme: dark){:root{--v-accent:#818cf8;--v-accent-soft:rgba(129,140,248,.14);
+--v-accent-line:rgba(129,140,248,.35);--v-muted:rgba(170,170,185,.95);--v-line:rgba(160,160,180,.20);
+--v-surface:rgba(160,160,180,.06);--v-surface-2:rgba(160,160,180,.10);--v-green:#4ade80;
+--v-green-soft:rgba(74,222,128,.12);--v-red:#f87171;--v-red-soft:rgba(248,113,113,.12);
+--v-shadow:0 6px 20px rgba(0,0,0,.35);}}
+html,body,[class*="css"],.stMarkdown,button,input,textarea{font-family:-apple-system,BlinkMacSystemFont,
+"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif !important;}
+.block-container{max-width:820px !important;padding-top:1.6rem !important;padding-bottom:7rem !important;}
+.stMarkdown p,.stMarkdown li{line-height:1.6;}
+header[data-testid="stHeader"]{background:transparent;}
+.v-head{display:flex;align-items:center;gap:12px;padding:4px 0 18px 0;}
+.v-mark{font-weight:650;font-size:1.05rem;letter-spacing:-.01em;}
+.v-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--v-accent);margin-right:8px;}
+.v-tag{color:var(--v-muted);font-size:.86rem;flex:1;}
+.v-pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.74rem;font-weight:500;
+border:1px solid var(--v-line);color:var(--v-muted);background:var(--v-surface);white-space:nowrap;}
+.v-pill.ok{color:var(--v-green);background:var(--v-green-soft);border-color:transparent;}
+.v-pill.no{color:var(--v-red);background:var(--v-red-soft);border-color:transparent;}
+.v-hero{text-align:center;padding:56px 0 28px 0;}
+.v-hero h1{font-size:2.1rem;font-weight:600;letter-spacing:-.02em;margin:0 0 8px 0;padding:0;}
+.v-hero p{color:var(--v-muted);font-size:1rem;margin:0;}
+.v-hint{color:var(--v-muted);font-size:.8rem;margin:-6px 4px 14px 4px;line-height:1.4;}
+div[data-testid="stButton"] > button{border-radius:14px;border:1px solid var(--v-line);background:var(--v-surface);
+padding:14px 16px;text-align:left;justify-content:flex-start;font-weight:550;transition:box-shadow .15s,border-color .15s;}
+div[data-testid="stButton"] > button:hover{border-color:var(--v-accent-line);box-shadow:var(--v-shadow);color:inherit;}
+div[data-testid="stButton"] > button:focus:not(:active){border-color:var(--v-accent-line);color:inherit;}
+.v-user{display:flex;justify-content:flex-end;margin:22px 0 14px 0;}
+.v-user div{max-width:78%;background:var(--v-surface-2);border:1px solid var(--v-line);border-radius:16px 16px 4px 16px;
+padding:10px 16px;line-height:1.6;}
+.v-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--v-muted);font-weight:600;margin:18px 0 6px 0;}
+.v-verdict{font-size:1.06rem;line-height:1.6;font-weight:550;margin:2px 0 4px 0;}
+.v-body{line-height:1.6;}
+.v-body ul{margin:4px 0;padding-left:20px;}
+.v-ids{margin:8px 0 4px 0;}
+.v-id{display:inline-block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.74rem;padding:1px 8px;
+margin:2px 3px 2px 0;border-radius:8px;border:1px solid var(--v-line);background:var(--v-surface);color:var(--v-muted);}
+.v-src{display:inline-flex;align-items:center;gap:6px;padding:4px 12px 4px 5px;margin:3px 6px 3px 0;border-radius:999px;
+border:1px solid var(--v-line);background:var(--v-surface);font-size:.82rem;}
+.v-src b{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;
+background:var(--v-accent-soft);color:var(--v-accent);font-size:.72rem;font-weight:650;}
+div[data-testid="stExpander"] details,div[data-testid="stExpander"]{border-radius:14px !important;border-color:var(--v-line) !important;}
+div[data-testid="stExpander"] summary{font-size:.86rem;}
+div[data-testid="stGraphVizChart"]{border:1px solid var(--v-line);border-radius:16px;padding:12px;background:var(--v-surface);}
+.v-conf{color:var(--v-muted);font-size:.88rem;line-height:1.6;border-left:2px solid var(--v-line);padding-left:12px;margin-top:16px;}
+.v-foot{color:var(--v-muted);font-size:.8rem;padding-top:10px;}
+.v-review{color:var(--v-muted);font-size:.76rem;margin:4px 0 6px 0;}
+.v-sep{height:1px;background:var(--v-line);margin:26px 0 4px 0;}
+div[data-testid="stChatInput"]{border-radius:999px !important;border:1px solid var(--v-line) !important;overflow:hidden;}
+div[data-testid="stChatInput"] textarea{padding-left:14px !important;}
+div[data-testid="stDataFrame"]{border-radius:12px;overflow:hidden;}
+</style>""", unsafe_allow_html=True)
 
 EXAMPLES = [
     "Why was account ACC-0007 flagged for structuring?",
@@ -43,44 +74,16 @@ EXAMPLES = [
     "Are we compliant with our liquidity coverage ratio?",
     "Which loan accounts are NPA and what provisioning is required?",
 ]
-SHORT = [
-    "Structuring (ACC-0007)",
-    "High-risk remittance (ACC-0012)",
-    "Velocity pattern (ACC-0019)",
-    "Ring connections (ACC-0031)",
-    "LCR compliance",
-    "NPA provisioning",
+CARDS = [
+    ("Structuring alert", "Why ACC-0007 was flagged"),
+    ("High-risk remittance", "Was ACC-0012 compliant?"),
+    ("Velocity pattern", "Pass-through on ACC-0019"),
+    ("Ring connections", "Who is ACC-0031 linked to?"),
+    ("LCR compliance", "Liquidity coverage vs floor"),
+    ("NPA provisioning", "Loans in NPA and provisions"),
 ]
-for k, v in [("messages", []), ("parsed", None), ("q", None), ("secs", None)]:
-    if k not in st.session_state:
-        st.session_state[k] = v
-
-
-def md_to_html(text):
-    t = html_mod.escape(text)
-    t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)
-    lines = t.split("\n")
-    out, in_list = [], False
-    for line in lines:
-        stripped = line.strip()
-        if re.match(r"^[-*]\s+", stripped):
-            if not in_list:
-                out.append("<ul style='margin:4px 0;padding-left:20px;'>")
-                in_list = True
-            item = re.sub(r"^[-*]\s+", "", stripped)
-            out.append("<li>" + item + "</li>")
-        else:
-            if in_list:
-                out.append("</ul>")
-                in_list = False
-            if stripped:
-                out.append(stripped + "<br>")
-    if in_list:
-        out.append("</ul>")
-    result = "\n".join(out)
-    if result.endswith("<br>"):
-        result = result[:-4]
-    return result
+if "messages" not in st.session_state:
+    st.session_state["messages"] = []
 
 
 def call_agent(question):
@@ -103,10 +106,34 @@ _SECTION_RE = re.compile(
     r"[\*:]*\s*[:\u2014\-]*\s*",
     re.IGNORECASE,
 )
-_FRAG_RE = re.compile(r"^\([^)]*\)\s*[:*]*\s*")
 _RID_RE = re.compile(r"(?:TXN-\d+|ACC-\d+|ALT-\d+|RING-\d+|LN-\d+|\d{4}-\d{2}-\d{2})")
 _POL_RE = re.compile(r"POL-[A-Z]+-\d+\s+Clause\s+[\d.]+")
 _CLAUSE_RE = re.compile(r"[Cc]lause\s+\d")
+_FRAG_RE = re.compile(r"^\([^)]*\)\s*[:*]*\s*")
+
+
+def md_to_html(text):
+    out, in_list = [], False
+    for line in (text or "").split("\n"):
+        s = line.strip()
+        esc = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", html.escape(s))
+        if s.startswith("- ") or s.startswith("* "):
+            if not in_list:
+                out.append("<ul>")
+                in_list = True
+            out.append("<li>" + esc[2:].strip() + "</li>")
+            continue
+        if in_list:
+            out.append("</ul>")
+            in_list = False
+        if s:
+            out.append(esc + "<br>")
+    if in_list:
+        out.append("</ul>")
+    result = "".join(out)
+    if result.endswith("<br>"):
+        result = result[:-4]
+    return result
 
 
 def parse_agent(raw_json):
@@ -209,31 +236,6 @@ def build_summary(sections, full):
     return first
 
 
-def build_dot(ring_data):
-    if not ring_data:
-        return None
-    edges = ring_data.get("edges", [])
-    ring = ring_data.get("ring", {})
-    if ring.get("status") == "NO_RING_FOUND" or not edges:
-        return None
-    rid = ring.get("ring_id", "")
-    sl = ring.get("shared_link", "")
-    lines = [
-        "graph {",
-        '  label="' + rid + ": " + sl + '"',
-        '  labelloc="t"  fontsize=14',
-        '  bgcolor="transparent"',
-        '  node [shape=box style=filled fillcolor="#d0e0f0" fontsize=10 color="#888"]',
-        '  edge [fontsize=8 color="#888"]',
-    ]
-    for e in edges:
-        a, b = e.get("account_a", ""), e.get("account_b", "")
-        sv = e.get("shared_value", "")
-        lines.append('  "' + a + '" -- "' + b + '" [label="' + sv + '"]')
-    lines.append("}")
-    return "\n".join(lines)
-
-
 def make_markdown(question, parsed, secs):
     ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
     s = parsed.get("sections", {})
@@ -259,207 +261,204 @@ def make_markdown(question, parsed, secs):
     return md
 
 
-def rid_pills(rids):
-    return " ".join('<span class="pill">' + html_mod.escape(r) + "</span>" for r in rids)
+_CIT_KEY = re.compile(r"(POL-[A-Z]+-\d+)\s+Clause\s+(\d+)")
 
 
-def pol_badge(cit_text):
-    m = re.match(r"(POL-[A-Z]+-\d+)\s+(Clause\s+[\d.]+)", cit_text)
-    if m:
-        doc, clause = m.group(1), m.group(2)
-        rest = cit_text[m.end():]
-        rest = re.sub(r"^\s*[\u2014\-]+\s*", " ", rest).strip()
-        return (
-            '<span class="chip chip-blue">' + html_mod.escape(doc) + "</span> "
-            + "<strong>" + html_mod.escape(clause) + "</strong>"
-            + (" &mdash; " + md_to_html(rest) if rest else "")
-        )
-    return md_to_html(cit_text)
+def citations_of(parsed):
+    seen, out = set(), []
+    text = parsed.get("sections", {}).get("policy", "") + "\n" + parsed.get("full_text", "")
+    for m in _CIT_KEY.finditer(text):
+        key = m.group(1) + " Clause " + m.group(2)
+        if key not in seen:
+            seen.add(key)
+            out.append(key)
+    return out
 
 
-hcol1, hcol2 = st.columns([6, 1])
-with hcol1:
-    st.markdown(
-        '<span style="font-size:1.6em;font-weight:700;letter-spacing:-.02em;">Vigil</span>'
-        '&ensp;<span style="font-size:.95em;opacity:.6;">Risk, Fraud & Regulatory Intelligence</span>',
-        unsafe_allow_html=True,
-    )
-with hcol2:
-    st.markdown(
-        '<span class="chip chip-gray">Synthetic data</span>',
-        unsafe_allow_html=True,
-    )
+@st.cache_data(show_spinner=False)
+def clause_lookup(keys):
+    safe = [k for k in keys if re.fullmatch(r"POL-[A-Z]+-\d+ Clause \d+", k)]
+    if not safe:
+        return {}
+    in_list = ",".join("'" + k + "'" for k in safe)
+    rows = session.sql(
+        "SELECT CITATION, DOC_TITLE, CLAUSE_TITLE, CLAUSE_TEXT FROM VIGIL.CORE.POLICY_CLAUSES "
+        "WHERE CITATION IN (" + in_list + ")"
+    ).collect()
+    return {r["CITATION"]: (r["DOC_TITLE"], r["CLAUSE_TITLE"], r["CLAUSE_TEXT"]) for r in rows}
 
-left, right = st.columns([1, 1], gap="large")
 
-with left:
-    st.markdown('<span style="font-weight:600;">Examples</span>', unsafe_allow_html=True)
-    chip_cols = st.columns(3)
-    for i, label in enumerate(SHORT):
-        if chip_cols[i % 3].button(label, key="ex_" + str(i), use_container_width=True):
-            st.session_state["_pending"] = EXAMPLES[i]
+def policy_note(parsed, key):
+    for line in parsed.get("sections", {}).get("policy", "").split("\n"):
+        m = _CIT_KEY.search(line)
+        if m and m.group(1) + " Clause " + m.group(2) == key:
+            rest = re.sub(r"^[\s.\d]*[\u2014\-:]*\s*", "", line[m.end():]).strip().strip('"\u201c\u201d').strip()
+            return rest
+    return ""
 
-    st.markdown("---")
-    for msg in st.session_state.messages:
-        with st.chat_message(msg["role"]):
-            if msg["role"] == "assistant":
-                st.markdown(
-                    '<span class="summary-line">' + html_mod.escape(msg.get("summary", "")) + "</span>"
-                    + "<br><em style='opacity:.55;font-size:.82em;'>Full finding in the audit panel.</em>",
-                    unsafe_allow_html=True,
-                )
-            else:
-                st.markdown(msg["content"])
 
-with right:
-    st.markdown('<span style="font-weight:600;">Audit Panel</span>', unsafe_allow_html=True)
-    p = st.session_state["parsed"]
-    q = st.session_state["q"]
-    secs = st.session_state["secs"]
+def build_dot(ring_data):
+    if not ring_data:
+        return None
+    edges = ring_data.get("edges", [])
+    ring = ring_data.get("ring", {})
+    if ring.get("status") == "NO_RING_FOUND" or not edges:
+        return None
+    deg = {}
+    for e in edges:
+        for n in (e.get("account_a", ""), e.get("account_b", "")):
+            deg[n] = deg.get(n, 0) + 1
+    hub = max(deg, key=deg.get)
+    title = ring.get("ring_id", "") + "  \u00b7  shared counterparty: " + ring.get("shared_link", "")
+    lines = [
+        "graph {",
+        '  label="' + title.replace('"', "") + '" labelloc="t" fontsize=12 fontcolor="#8b8ba0"',
+        '  fontname="Helvetica" bgcolor="transparent" pad=0.3 nodesep=0.5',
+        '  node [shape=box style="rounded,filled" fontname="Helvetica" fontsize=11 '
+        'fillcolor="#eef0fb" color="#c7cbe8" fontcolor="#33334a" penwidth=1 margin="0.18,0.08"]',
+        '  edge [color="#a5a8c0" penwidth=1.2]',
+        '  "' + hub + '" [fillcolor="#4f46e5" color="#4f46e5" fontcolor="#ffffff"]',
+    ]
+    for e in edges:
+        lines.append('  "' + e.get("account_a", "") + '" -- "' + e.get("account_b", "") + '"')
+    lines.append("}")
+    return "\n".join(lines)
 
-    if p is None:
-        st.markdown(
-            '<div class="vcard" style="text-align:center;opacity:.6;padding:40px;">'
-            "Ask a question to see the audit-ready finding here."
-            "</div>",
-            unsafe_allow_html=True,
-        )
-    elif p.get("error"):
+
+def render_answer(idx, msg):
+    p, q, secs = msg["parsed"], msg["q"], msg["secs"]
+    if p.get("error"):
         st.error("Agent error: " + str(p["error"]))
+        return
+    s = p.get("sections", {})
+    cited = p.get("cited", False)
+    if cited:
+        pill = '<span class="v-pill ok">Cited</span>'
     else:
-        s = p.get("sections", {})
-        cited = p.get("cited", False)
+        why = []
+        if not p.get("has_rid"):
+            why.append("no record ID")
+        if not p.get("has_pol"):
+            why.append("no policy clause")
+        pill = '<span class="v-pill no">Not citable' + (" &middot; " + " and ".join(why) if why else "") + "</span>"
 
-        cls = "cited" if cited else "notcitable"
-        badge = (
-            '<span class="chip chip-green">Cited</span>'
-            if cited
-            else '<span class="chip chip-red">Not citable</span>'
-        )
-        if not cited:
-            reason_parts = []
-            if not p.get("has_rid"):
-                reason_parts.append("no record ID")
-            if not p.get("has_pol"):
-                reason_parts.append("no policy clause")
-            badge += (
-                ' <span style="font-size:.8em;opacity:.7;">'
-                + " and ".join(reason_parts)
-                + "</span>"
-            )
-        verdict_body = s.get("verdict", p.get("full_text", "No response")[:600])
-        st.markdown(
-            '<div class="vcard-verdict ' + cls + '">'
-            + badge + "<br><br>"
-            + md_to_html(verdict_body)
-            + "</div>",
-            unsafe_allow_html=True,
-        )
+    st.markdown('<div class="v-label">Verdict &ensp;' + pill + "</div>", unsafe_allow_html=True)
+    st.markdown('<div class="v-verdict">' + html_mod.escape(p.get("summary", "")) + "</div>", unsafe_allow_html=True)
+    vbody = s.get("verdict", "")
+    vlines = [l for l in vbody.split("\n") if l.strip()]
+    if len(vlines) > 1:
+        st.markdown('<div class="v-body">' + md_to_html("\n".join(vlines[1:])) + "</div>", unsafe_allow_html=True)
 
-        evidence_text = s.get("evidence", "")
-        if evidence_text or p.get("tables") or p.get("rids"):
-            st.markdown(
-                '<div class="vcard"><strong>Evidence</strong><br><br>'
-                + md_to_html(evidence_text)
-                + "</div>",
-                unsafe_allow_html=True,
-            )
-            for tbl in p.get("tables", []):
+    ev = s.get("evidence", "")
+    if ev or p.get("tables") or p.get("rids"):
+        st.markdown('<div class="v-label">Evidence</div>', unsafe_allow_html=True)
+        if ev:
+            st.markdown('<div class="v-body">' + md_to_html(ev) + "</div>", unsafe_allow_html=True)
+        for tbl in p.get("tables", []):
+            if tbl["columns"] and tbl["rows"]:
                 if tbl.get("title"):
                     st.caption(tbl["title"])
-                if tbl["columns"] and tbl["rows"]:
-                    df = pd.DataFrame(tbl["rows"], columns=tbl["columns"])
-                    st.dataframe(df, use_container_width=True)
-            if p.get("rids"):
-                st.markdown(
-                    '<div style="margin-bottom:12px;">'
-                    + rid_pills(p["rids"])
-                    + "</div>",
-                    unsafe_allow_html=True,
-                )
+                st.dataframe(pd.DataFrame(tbl["rows"], columns=tbl["columns"]), use_container_width=True)
+        if p.get("rids"):
+            st.markdown('<div class="v-ids">' + "".join(
+                '<span class="v-id">' + html_mod.escape(r) + "</span>" for r in p["rids"]) + "</div>",
+                unsafe_allow_html=True)
 
-        pol_text = s.get("policy", "")
-        pol_lines = [
-            l.strip().lstrip("-").strip()
-            for l in pol_text.split("\n")
-            if l.strip() and l.strip() != "-"
-        ]
-        if pol_lines:
-            for line in pol_lines:
-                st.markdown(
-                    '<div class="vcard-policy">' + pol_badge(line) + "</div>",
-                    unsafe_allow_html=True,
-                )
-        elif p.get("search_cits"):
-            for cit in p["search_cits"]:
-                st.markdown(
-                    '<div class="vcard-policy">' + md_to_html(cit[:300]) + "</div>",
-                    unsafe_allow_html=True,
-                )
+    cits = citations_of(p)
+    if cits:
+        st.markdown('<div class="v-label">Sources</div>', unsafe_allow_html=True)
+        st.markdown("".join(
+            '<span class="v-src"><b>' + str(i + 1) + "</b>" + html_mod.escape(c) + "</span>"
+            for i, c in enumerate(cits)), unsafe_allow_html=True)
+        found = clause_lookup(tuple(cits))
+        for i, c in enumerate(cits):
+            with st.expander("[" + str(i + 1) + "]  " + c):
+                if c in found:
+                    dt, ct, tx = found[c]
+                    st.markdown("**" + dt + "** \u00b7 " + ct)
+                    st.markdown("> " + tx.replace("\n", "\n> "))
+                else:
+                    st.caption("Clause text not found in VIGIL.CORE.POLICY_CLAUSES.")
+                note = policy_note(p, c)
+                if note:
+                    st.caption("How it applies: " + note)
+    elif p.get("search_cits"):
+        st.markdown('<div class="v-label">Sources</div>', unsafe_allow_html=True)
+        for i, c in enumerate(p["search_cits"]):
+            with st.expander("[" + str(i + 1) + "]  Policy source"):
+                st.markdown(c[:600])
 
-        if p.get("has_ring") and p.get("ring_data"):
-            dot = build_dot(p["ring_data"])
-            if dot:
-                st.markdown(
-                    '<div class="vcard"><strong>Account Graph</strong></div>',
-                    unsafe_allow_html=True,
-                )
-                st.graphviz_chart(dot)
+    if p.get("has_ring") and p.get("ring_data"):
+        dot = build_dot(p["ring_data"])
+        if dot:
+            st.markdown('<div class="v-label">Account graph</div>', unsafe_allow_html=True)
+            st.graphviz_chart(dot, use_container_width=True)
 
-        conf = s.get("confidence", "")
-        if conf:
-            st.markdown(
-                '<div class="vcard-conf">'
-                + "<strong>Confidence</strong><br>"
-                + md_to_html(conf)
-                + "</div>",
-                unsafe_allow_html=True,
-            )
+    conf = s.get("confidence", "")
+    if conf:
+        st.markdown('<div class="v-conf"><strong>Confidence</strong> &middot; ' + md_to_html(conf) + "</div>",
+                    unsafe_allow_html=True)
 
-        ts_str = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-        md = make_markdown(q, p, secs)
-        fcol1, fcol2 = st.columns([1, 1])
-        with fcol1:
-            st.markdown(
-                "**Measured wall-clock seconds for this call:** " + str(secs)
-            )
-        with fcol2:
-            st.download_button(
-                "Download finding",
-                data=md,
-                file_name="vigil_finding_" + ts_str + ".md",
-                mime="text/markdown",
-                use_container_width=True,
-            )
-        st.markdown(
-            '<div class="footer-banner">'
-            "Draft for human review. A human signs off on every filing."
-            "</div>",
-            unsafe_allow_html=True,
+    f1, f2 = st.columns([3, 2])
+    with f1:
+        st.markdown('<div class="v-foot">Measured wall-clock seconds for this call: <strong>'
+                    + str(secs) + "</strong></div>", unsafe_allow_html=True)
+    with f2:
+        st.download_button(
+            "Download finding", data=make_markdown(q, p, secs),
+            file_name="vigil_finding_" + msg["ts"] + ".md", mime="text/markdown",
+            key="dl_" + str(idx), use_container_width=True,
         )
+    st.markdown('<div class="v-review">Draft for human review. A human signs off on every filing.</div>',
+                unsafe_allow_html=True)
 
 
-user_input = st.chat_input("Ask Vigil...")
-question = None
-if user_input:
-    question = user_input
-elif "_pending" in st.session_state:
-    question = st.session_state.pop("_pending")
+st.markdown(
+    '<div class="v-head"><span class="v-mark"><span class="v-dot"></span>Vigil</span>'
+    '<span class="v-tag">Risk, fraud &amp; regulatory intelligence</span>'
+    '<span class="v-pill">Synthetic data</span></div>',
+    unsafe_allow_html=True,
+)
+
+msgs = st.session_state["messages"]
+if not msgs:
+    st.markdown(
+        '<div class="v-hero"><h1>What should we look into?</h1>'
+        "<p>Ask about an alert, an account, liquidity or credit. Every answer is cited.</p></div>",
+        unsafe_allow_html=True,
+    )
+    for row in range(3):
+        c1, c2 = st.columns(2, gap="small")
+        for col, i in ((c1, row * 2), (c2, row * 2 + 1)):
+            with col:
+                if st.button(CARDS[i][0], key="ex_" + str(i), use_container_width=True):
+                    st.session_state["_pending"] = EXAMPLES[i]
+                st.markdown('<div class="v-hint">' + CARDS[i][1] + "</div>", unsafe_allow_html=True)
+else:
+    for idx, msg in enumerate(msgs):
+        if msg["role"] == "user":
+            if idx > 0:
+                st.markdown('<div class="v-sep"></div>', unsafe_allow_html=True)
+            st.markdown('<div class="v-user"><div>' + html_mod.escape(msg["content"]) + "</div></div>",
+                        unsafe_allow_html=True)
+        else:
+            render_answer(idx, msg)
+
+user_input = st.chat_input("Ask Vigil anything about risk, fraud or compliance...")
+question = user_input or st.session_state.pop("_pending", None)
 
 if question:
-    st.session_state.messages.append({"role": "user", "content": question})
-    with st.status("Vigil is investigating...", expanded=True) as status:
-        st.write("Querying transaction data...")
+    if msgs:
+        st.markdown('<div class="v-sep"></div>', unsafe_allow_html=True)
+    st.markdown('<div class="v-user"><div>' + html_mod.escape(question) + "</div></div>", unsafe_allow_html=True)
+    with st.status("Vigil is investigating...", expanded=False) as status:
         raw, elapsed = call_agent(question)
-        st.write("Parsing response...")
         parsed = parse_agent(raw)
         status.update(label="Done in " + str(elapsed) + "s", state="complete")
-
-    summary = parsed.get("summary", "")
-    st.session_state.messages.append(
-        {"role": "assistant", "content": summary, "summary": summary}
-    )
-    st.session_state["parsed"] = parsed
-    st.session_state["q"] = question
-    st.session_state["secs"] = elapsed
+    msgs.append({"role": "user", "content": question})
+    msgs.append({
+        "role": "assistant", "parsed": parsed, "q": question, "secs": elapsed,
+        "ts": datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S"),
+        "content": parsed.get("summary", ""),
+    })
     st.rerun()

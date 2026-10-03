@@ -76,7 +76,7 @@ slide("Architecture (all in Snowflake)", [
     "8 tables / Dynamic Tables in VIGIL.CORE: customers, accounts, transactions, alerts, LCR snapshots, credit profiles, RING_EDGES, RINGS.",
     "Cortex Search over 35 numbered policy clauses; semantic view with 6 verified queries.",
     "One Cortex Agent, three tools: analytics, policy search, ring lookup.",
-    "Streamlit-in-Snowflake app: chat + audit panel + ring graph + markdown download.",
+    "Streamlit-in-Snowflake app: AI-assistant-style chat with inline cited answers + ring graph + finding download.",
 ])
 
 slide("The novel piece: ring detection", [

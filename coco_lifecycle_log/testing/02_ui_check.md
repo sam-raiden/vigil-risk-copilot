@@ -23,3 +23,7 @@
 ## Fourth follow-up (2026-10-03) - ring graph in the redesigned app
 - Clicked the ring example in the deployed app after a full reload: the graph card renders RING-001 (ACC-0031 linked to ACC-0032..0035, title "RING-001: Orion Trading Co"), the Confidence card cites POL-AML-001 Clause 4.5.2 and says a human must sign off, 30.2 s measured, download button present.
 - Cosmetic flaw seen: the four edge labels "Orion Trading Co" overlap each other. Not fixed. Only the lower half of the panel was viewed in this check (graph and confidence), not the verdict and evidence cards.
+
+## Fifth follow-up (2026-10-03) - second redesign (development/10)
+- Fresh tab, full reload, clicked the ring example: inline answer rendered with Verdict + CITED, Evidence, edge table, source chips and expanders, ring graph (hub highlighted, edge labels gone, so the overlap flaw is fixed), Confidence note, 34.3 s, Download finding, review line.
+- Not verified after this redesign: source expanders opened, dark mode, examples 1, 2, 3, 5, 6, the downloaded file. The verdict line ended with an ellipsis.

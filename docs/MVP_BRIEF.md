@@ -9,7 +9,7 @@ Vigil is a cited risk, fraud and regulatory copilot for banking and NBFC complia
 - **Liquidity** — LCR calculation and breach history with the Basel III clause (calculation + citation only).
 - **Credit** — NPA classification and provisioning with the RBI IRAC clause (calculation + citation only).
 
-One Cortex Agent has three tools (analytics over a semantic view with six verified queries, policy search over 35 numbered clauses, and a ring lookup). A Streamlit-in-Snowflake app shows a chat and an audit panel (verdict, evidence, record IDs, policy citations, confidence note, measured seconds, markdown download, ring graph). It never presents an uncited answer as a finding and asks which account/loan when the question does not say.
+One Cortex Agent has three tools (analytics over a semantic view with six verified queries, policy search over 35 numbered clauses, and a ring lookup). A Streamlit-in-Snowflake app shows an AI-assistant-style chat whose answers are inline (verdict with a Cited pill, evidence, numbered source chips that expand to the clause text, ring graph, confidence note, measured seconds, finding download). It never presents an uncited answer as a finding and asks which account/loan when the question does not say.
 
 Signal → Evidence → Documented finding. A human signs off on every filing; nothing acts unasked.
 
