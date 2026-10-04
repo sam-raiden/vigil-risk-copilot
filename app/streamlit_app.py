@@ -13,113 +13,97 @@ def logo_svg(size=44, uid="a"):
     return (
         '<svg width="' + str(size) + '" height="' + str(size) + '" viewBox="0 0 48 48" '
         'aria-label="Vigil">'
-        '<defs><linearGradient id="vg' + uid + '" x1="0" y1="0" x2="1" y2="1">'
-        '<stop offset="0" stop-color="#29B5E8"/><stop offset="1" stop-color="#11567F"/></linearGradient></defs>'
-        '<path d="M24 3 L42 10 V23 C42 34 34.5 41.5 24 45 C13.5 41.5 6 34 6 23 V10 Z" fill="url(#vg' + uid + ')"/>'
+        '<path d="M24 3 L42 10 V23 C42 34 34.5 41.5 24 45 C13.5 41.5 6 34 6 23 V10 Z" fill="#29B5E8"/>'
         '<path d="M12.5 24 C16 18 20 15.5 24 15.5 C28 15.5 32 18 35.5 24 C32 30 28 32.5 24 32.5 '
         'C20 32.5 16 30 12.5 24 Z" fill="#ffffff" opacity=".95"/>'
-        '<circle cx="24" cy="24" r="5.2" fill="url(#vg' + uid + ')"/>'
+        '<circle cx="24" cy="24" r="5.2" fill="#11567F"/>'
         '<circle cx="25.8" cy="22.2" r="1.6" fill="#ffffff"/></svg>'
     )
 
 
 st.markdown("""<style>
 :root{
---v-sf:#29B5E8;--v-med:#11567F;--v-star:#75CDD7;
---v-orange:#FF9F36;--v-pink:#D45B90;--v-purple:#7254A3;
---v-midnight:#1E2A38;
---v-grad:linear-gradient(135deg,#29B5E8 0%,#11567F 100%);
---v-band:linear-gradient(120deg,rgba(41,181,232,.10) 0%,rgba(17,86,127,.09) 55%,rgba(117,205,215,.07) 100%);
---v-muted:rgba(90,90,110,.95);--v-line:rgba(110,110,140,.20);--v-surface:rgba(110,110,140,.05);
---v-sf-t:rgba(41,181,232,.09);--v-med-t:rgba(17,86,127,.09);--v-star-t:rgba(117,205,215,.10);
---v-orange-t:rgba(255,159,54,.11);--v-pink-t:rgba(212,91,144,.09);--v-purple-t:rgba(114,84,163,.09);
---v-sf-b:rgba(41,181,232,.30);--v-star-ink:#11567F;--v-orange-ink:#B45309;--v-sf-ink:#11567F;
---v-shadow:0 10px 24px rgba(41,181,232,.14);
---v-ltbg:#F0F9FD;--v-ltbg2:#E3F4FB;}
+--v-accent:#29B5E8;--v-med:#11567F;
+--v-text:#1E2A38;--v-secondary:#5B6B7B;
+--v-surface:#F5F7FA;--v-border:#DDE3EA;
+--v-page:#FFFFFF;--v-verdict-bg:#F5F9FC;
+--v-user-bg:#EEF2F6;
+}
 @media (prefers-color-scheme: dark){:root{
---v-band:linear-gradient(120deg,rgba(41,181,232,.18) 0%,rgba(17,86,127,.15) 55%,rgba(117,205,215,.10) 100%);
---v-muted:rgba(200,205,215,.95);--v-line:rgba(160,170,190,.22);--v-surface:rgba(160,170,190,.06);
---v-sf-t:rgba(41,181,232,.14);--v-med-t:rgba(17,86,127,.18);--v-star-t:rgba(117,205,215,.13);
---v-orange-t:rgba(255,159,54,.13);--v-pink-t:rgba(212,91,144,.13);--v-purple-t:rgba(114,84,163,.13);
---v-sf-b:rgba(41,181,232,.45);--v-star-ink:#75CDD7;--v-orange-ink:#FF9F36;--v-sf-ink:#29B5E8;
---v-shadow:0 10px 24px rgba(0,0,0,.40);
---v-midnight:#E8ECF0;--v-ltbg:#0B1F2E;--v-ltbg2:#11334A;}}
+--v-page:#0E1B27;--v-surface:#14263A;--v-border:#25405A;
+--v-text:#E6EDF3;--v-secondary:#8FA3B5;
+--v-accent:#29B5E8;--v-med:#29B5E8;
+--v-verdict-bg:#14263A;--v-user-bg:#14263A;
+}}
 html,body,[class*="css"],.stMarkdown,button,input,textarea{font-family:-apple-system,BlinkMacSystemFont,
 "Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif !important;}
 .block-container{max-width:820px !important;padding-top:1.2rem !important;padding-bottom:7rem !important;}
 .stMarkdown p,.stMarkdown li{line-height:1.6;}
 header[data-testid="stHeader"]{background:transparent;}
-.v-band{background:var(--v-band),var(--v-ltbg2);border:1px solid var(--v-line);border-radius:20px;padding:18px 22px;
-display:flex;align-items:center;gap:16px;margin-bottom:14px;}
-.v-band .v-txt{flex:1;min-width:0;}
-.v-word{font-size:44px;font-weight:800;line-height:1.05;letter-spacing:-.03em;background:var(--v-grad);
--webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;}
-.v-tagline{color:var(--v-muted);font-size:.92rem;margin-top:2px;}
-.v-chips{display:flex;flex-direction:column;gap:6px;align-items:flex-end;}
-.v-chip{display:inline-block;padding:3px 11px;border-radius:999px;font-size:.74rem;font-weight:600;white-space:nowrap;}
-.v-chip.syn{background:var(--v-star-t);color:var(--v-star-ink);}
-.v-chip.hitl{background:var(--v-orange-t);color:var(--v-orange-ink);}
+.v-topbar{display:flex;align-items:center;gap:12px;padding:10px 0 14px 0;border-bottom:1px solid var(--v-border);margin-bottom:16px;}
+.v-topbar-title{font-size:20px;font-weight:600;color:var(--v-text);}
+.v-topbar-sub{color:var(--v-secondary);font-size:.82rem;}
+.v-topbar-chips{margin-left:auto;display:flex;gap:6px;}
+.v-chip{display:inline-block;padding:3px 10px;border-radius:999px;font-size:.72rem;font-weight:600;
+border:1px solid var(--v-border);color:var(--v-secondary);background:transparent;}
 .v-hero{text-align:center;padding:10px 0 14px 0;}
-.v-hero h2{font-size:1.45rem;font-weight:650;letter-spacing:-.01em;margin:0 0 4px 0;padding:0;color:var(--v-midnight);}
-.v-hero p{color:var(--v-muted);font-size:.95rem;margin:0;}
-.v-card{border:1px solid var(--v-line);border-radius:16px;padding:12px 14px;margin:4px 0 4px 0;display:flex;
-gap:12px;align-items:center;background-color:var(--v-ltbg);transition:transform .15s,box-shadow .15s,border-color .15s;}
-.v-card:hover{transform:translateY(-2px);box-shadow:var(--v-shadow);border-color:var(--v-sf-b);}
-.v-ico{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;
-font-size:19px;flex-shrink:0;}
-.v-ct{font-weight:650;font-size:.93rem;line-height:1.3;color:var(--v-midnight);}
-.v-ch{color:var(--v-muted);font-size:.8rem;line-height:1.35;}
-.t-orange{background-image:linear-gradient(var(--v-orange-t),var(--v-orange-t));} .t-orange .v-ico{background:rgba(255,159,54,.20);}
-.t-pink{background-image:linear-gradient(var(--v-pink-t),var(--v-pink-t));} .t-pink .v-ico{background:rgba(212,91,144,.18);}
-.t-purple{background-image:linear-gradient(var(--v-purple-t),var(--v-purple-t));} .t-purple .v-ico{background:rgba(114,84,163,.18);}
-div[data-testid="stButton"] > button{border-radius:12px;border:1px solid var(--v-line);background:transparent;
-padding:4px 12px;min-height:0;font-size:.8rem;font-weight:600;color:var(--v-sf-ink);margin-bottom:10px;
-transition:border-color .15s,background .15s;}
-div[data-testid="stButton"] > button:hover{border-color:var(--v-sf-b);background:var(--v-sf-t);color:var(--v-sf-ink);}
-div[data-testid="stButton"] > button:focus:not(:active){border-color:var(--v-sf-b);color:var(--v-sf-ink);}
-div[data-testid="stDownloadButton"] > button{background:var(--v-grad) !important;color:#fff !important;border:0 !important;
-border-radius:12px;font-weight:600;transition:box-shadow .15s,transform .15s;}
-div[data-testid="stDownloadButton"] > button:hover{box-shadow:var(--v-shadow);transform:translateY(-1px);color:#fff !important;}
+.v-hero h2{font-size:1.25rem;font-weight:600;margin:0 0 4px 0;padding:0;color:var(--v-text);}
+.v-hero p{color:var(--v-secondary);font-size:.9rem;margin:0;}
+.v-card{border:1px solid var(--v-border);border-radius:8px;padding:12px 14px;margin:4px 0 4px 0;
+background:var(--v-page);transition:border-color .15s;}
+.v-card:hover{border-color:var(--v-accent);}
+.v-ct{font-weight:600;font-size:.9rem;line-height:1.3;color:var(--v-text);}
+.v-ch{color:var(--v-secondary);font-size:.78rem;line-height:1.35;}
+.v-asklink{font-size:.78rem;color:var(--v-med);font-weight:600;cursor:pointer;background:none;border:none;padding:0;margin-top:4px;}
+.v-asklink:hover{text-decoration:underline;}
+div[data-testid="stButton"] > button{border-radius:6px;border:none;background:transparent;
+padding:2px 0;min-height:0;font-size:.78rem;font-weight:600;color:var(--v-med);
+transition:color .15s;}
+div[data-testid="stButton"] > button:hover{color:var(--v-accent);background:transparent;}
+div[data-testid="stButton"] > button:focus:not(:active){color:var(--v-med);background:transparent;}
+div[data-testid="stDownloadButton"] > button{background:var(--v-accent) !important;color:#fff !important;border:0 !important;
+border-radius:6px;font-weight:700;transition:opacity .15s;}
+div[data-testid="stDownloadButton"] > button:hover{opacity:.9;color:#fff !important;}
 div[data-testid="stDownloadButton"] > button p{color:#fff !important;}
 .v-user{display:flex;justify-content:flex-end;margin:22px 0 14px 0;}
-.v-user div{max-width:78%;background:var(--v-grad);color:#fff;border-radius:18px 18px 4px 18px;
-padding:10px 16px;line-height:1.6;box-shadow:0 4px 14px rgba(41,181,232,.22);}
-.v-who{display:flex;align-items:center;gap:8px;font-weight:700;font-size:.9rem;margin:6px 0 2px 0;color:var(--v-midnight);}
-.v-label{display:flex;align-items:center;gap:8px;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;
-color:var(--v-muted);font-weight:700;margin:18px 0 6px 0;}
-.v-label i{width:8px;height:8px;border-radius:50%;display:inline-block;}
-.d-sf{background:var(--v-sf);} .d-med{background:var(--v-med);} .d-star{background:var(--v-star);}
-.d-orange{background:var(--v-orange);}
-.v-verdict{border:1px solid var(--v-line);border-left:4px solid var(--v-sf);border-radius:14px;
-padding:12px 16px;background:linear-gradient(var(--v-sf-t),var(--v-sf-t)),var(--v-ltbg);}
-.v-verdict.ok{border-left-color:var(--v-star);background:linear-gradient(var(--v-star-t),var(--v-star-t)),var(--v-ltbg);}
-.v-verdict.no{border-left-color:var(--v-orange);background:linear-gradient(var(--v-orange-t),var(--v-orange-t)),var(--v-ltbg);}
-.v-vlead{font-size:1.04rem;line-height:1.6;font-weight:600;}
-.v-body{line-height:1.6;}
+.v-user div{max-width:78%;background:var(--v-user-bg);color:var(--v-text);border-radius:12px 12px 4px 12px;
+padding:10px 16px;line-height:1.6;}
+.v-who{display:flex;align-items:center;gap:8px;font-weight:600;font-size:.88rem;margin:6px 0 2px 0;color:var(--v-text);}
+.v-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;
+color:var(--v-secondary);font-weight:700;margin:18px 0 6px 0;}
+.v-verdict{border:1px solid var(--v-border);border-left:3px solid var(--v-accent);border-radius:8px;
+padding:12px 16px;background:var(--v-verdict-bg);}
+.v-vlead{font-size:1.02rem;line-height:1.6;font-weight:600;color:var(--v-text);}
+.v-body{line-height:1.6;color:var(--v-text);}
 .v-body ul{margin:4px 0;padding-left:20px;}
 .v-pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.72rem;font-weight:700;
 letter-spacing:.02em;text-transform:none;}
-.v-pill.ok{background:var(--v-star-t);color:var(--v-star-ink);border:1px solid rgba(117,205,215,.30);}
-.v-pill.no{background:var(--v-orange-t);color:var(--v-orange-ink);border:1px solid rgba(255,159,54,.30);}
+.v-pill.ok{background:transparent;color:var(--v-med);border:1px solid var(--v-border);}
+.v-pill.ok::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;
+background:var(--v-accent);margin-right:5px;vertical-align:middle;}
+.v-pill.no{background:transparent;color:#92610A;border:1px solid var(--v-border);}
 .v-ids{margin:8px 0 4px 0;}
 .v-id{display:inline-block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.74rem;padding:1px 8px;
-margin:2px 3px 2px 0;border-radius:8px;border:1px solid var(--v-line);background:var(--v-star-t);color:var(--v-muted);}
+margin:2px 3px 2px 0;border-radius:6px;border:1px solid var(--v-border);background:var(--v-surface);color:var(--v-secondary);}
 .v-src{display:inline-flex;align-items:center;gap:6px;padding:4px 12px 4px 5px;margin:3px 6px 3px 0;border-radius:999px;
-border:1px solid var(--v-sf-b);background:var(--v-star-t);color:var(--v-sf-ink);font-size:.82rem;font-weight:600;}
+border:1px solid var(--v-accent);background:var(--v-page);color:var(--v-med);font-size:.82rem;font-weight:600;}
 .v-src b{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;
-background:var(--v-grad);color:#fff;font-size:.7rem;}
-div[data-testid="stExpander"] details,div[data-testid="stExpander"]{border-radius:14px !important;border-color:var(--v-line) !important;}
+background:var(--v-accent);color:#fff;font-size:.7rem;}
+div[data-testid="stExpander"] details,div[data-testid="stExpander"]{border-radius:8px !important;border-color:var(--v-border) !important;}
 div[data-testid="stExpander"] summary{font-size:.86rem;}
-div[data-testid="stGraphVizChart"]{border:1px solid var(--v-line);border-radius:16px;padding:12px;background:var(--v-star-t);}
-.v-conf{color:var(--v-muted);font-size:.88rem;line-height:1.6;border-left:2px solid var(--v-med);padding-left:12px;margin-top:16px;}
-.v-foot{color:var(--v-muted);font-size:.8rem;padding-top:10px;}
-.v-review{color:var(--v-muted);font-size:.76rem;margin:4px 0 6px 0;}
-.v-sep{height:1px;background:var(--v-line);margin:26px 0 4px 0;}
-.v-brandfoot{text-align:center;color:var(--v-muted);font-size:.74rem;margin-top:28px;padding-top:10px;
-border-top:1px solid var(--v-line);}
-div[data-testid="stChatInput"]{border-radius:999px !important;border:1px solid var(--v-sf-b) !important;overflow:hidden;}
+div[data-testid="stGraphVizChart"]{border:1px solid var(--v-border);border-radius:8px;padding:12px;background:var(--v-page);}
+.v-conf{color:var(--v-secondary);font-size:.88rem;line-height:1.6;border-left:2px solid var(--v-border);padding-left:12px;margin-top:16px;}
+.v-foot{color:var(--v-secondary);font-size:.8rem;padding-top:10px;}
+.v-review{color:var(--v-secondary);font-size:.76rem;margin:4px 0 6px 0;}
+.v-sep{height:1px;background:var(--v-border);margin:26px 0 4px 0;}
+.v-brandfoot{text-align:center;color:var(--v-secondary);font-size:.74rem;margin-top:28px;padding-top:10px;
+border-top:1px solid var(--v-border);}
+div[data-testid="stChatInput"]{border-radius:8px !important;border:1px solid var(--v-border) !important;overflow:hidden;
+transition:border-color .15s;}
+div[data-testid="stChatInput"]:focus-within{border-color:var(--v-accent) !important;box-shadow:0 0 0 1px var(--v-accent) !important;}
 div[data-testid="stChatInput"] textarea{padding-left:14px !important;}
-div[data-testid="stDataFrame"]{border-radius:12px;overflow:hidden;}
+div[data-testid="stDataFrame"]{border-radius:8px;overflow:hidden;}
+div[data-testid="stDataFrame"] [data-testid="glideDataEditor"] [class*="header"]{background:var(--v-surface) !important;}
 </style>""", unsafe_allow_html=True)
 
 EXAMPLES = [
@@ -131,12 +115,12 @@ EXAMPLES = [
     "Which loan accounts are NPA and what provisioning is required?",
 ]
 CARDS = [
-    ("Structuring alert", "Why ACC-0007 was flagged", "\U0001F6E1\uFE0F", "orange"),
-    ("High-risk remittance", "Was ACC-0012 compliant?", "\U0001F30D", "pink"),
-    ("Velocity pattern", "Pass-through on ACC-0019", "\u26A1", "purple"),
-    ("Ring connections", "Who is ACC-0031 linked to?", "\U0001F578\uFE0F", "orange"),
-    ("LCR compliance", "Liquidity coverage vs floor", "\U0001F4A7", "pink"),
-    ("NPA provisioning", "Loans in NPA and provisions", "\U0001F4C9", "purple"),
+    ("Structuring alert", "Why ACC-0007 was flagged"),
+    ("High-risk remittance", "Was ACC-0012 compliant?"),
+    ("Velocity pattern", "Pass-through on ACC-0019"),
+    ("Ring connections", "Who is ACC-0031 linked to?"),
+    ("LCR compliance", "Liquidity coverage vs floor"),
+    ("NPA provisioning", "Loans in NPA and provisions"),
 ]
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
@@ -393,11 +377,11 @@ def build_dot(ring_data):
     title = ring.get("ring_id", "") + "  \u00b7  shared counterparty: " + ring.get("shared_link", "")
     lines = [
         "graph {",
-        '  label="' + title.replace('"', "") + '" labelloc="t" fontsize=12 fontcolor="#11567F"',
+        '  label="' + title.replace('"', "") + '" labelloc="t" fontsize=12 fontcolor="#1E2A38"',
         '  fontname="Helvetica" bgcolor="transparent" pad=0.3 nodesep=0.5',
         '  node [shape=box style="rounded,filled" fontname="Helvetica" fontsize=11 '
-        'fillcolor="#F0F9FD" color="#75CDD7" fontcolor="#1E2A38" penwidth=1 margin="0.18,0.08"]',
-        '  edge [color="#29B5E8" penwidth=1.4]',
+        'fillcolor="#FFFFFF" color="#29B5E8" fontcolor="#1E2A38" penwidth=1 margin="0.18,0.08"]',
+        '  edge [color="#8FA3B5" penwidth=1.4]',
         '  "' + hub + '" [fillcolor="#11567F" color="#11567F" '
         'fontcolor="#ffffff" penwidth=1.5]',
     ]
@@ -407,13 +391,9 @@ def build_dot(ring_data):
     return "\n".join(lines)
 
 
-def label(text, dot):
-    st.markdown('<div class="v-label"><i class="d-' + dot + '"></i>' + text + "</div>", unsafe_allow_html=True)
-
-
 def render_answer(idx, msg):
     p, q, secs = msg["parsed"], msg["q"], msg["secs"]
-    st.markdown('<div class="v-who">' + logo_svg(26, "m" + str(idx)) + "Vigil</div>", unsafe_allow_html=True)
+    st.markdown('<div class="v-who">' + logo_svg(22, "m" + str(idx)) + "Vigil</div>", unsafe_allow_html=True)
     if p.get("error"):
         st.error("Agent error: " + str(p["error"]))
         return
@@ -429,10 +409,10 @@ def render_answer(idx, msg):
             why.append("no policy clause")
         pill = '<span class="v-pill no">Not citable' + (" &middot; " + " and ".join(why) if why else "") + "</span>"
 
-    st.markdown('<div class="v-label"><i class="d-sf"></i>Verdict &ensp;' + pill + "</div>", unsafe_allow_html=True)
+    st.markdown('<div class="v-label">VERDICT &ensp;' + pill + "</div>", unsafe_allow_html=True)
     lead, more = verdict_lead(s, p.get("full_text", ""))
     st.markdown(
-        '<div class="v-verdict ' + ("ok" if cited else "no") + '"><div class="v-vlead">'
+        '<div class="v-verdict"><div class="v-vlead">'
         + html_mod.escape(lead) + "</div>"
         + ('<div class="v-body" style="margin-top:6px;">' + md_to_html(more) + "</div>" if more else "")
         + "</div>",
@@ -441,7 +421,7 @@ def render_answer(idx, msg):
 
     ev = s.get("evidence", "")
     if ev or p.get("tables") or p.get("rids"):
-        label("Evidence", "med")
+        st.markdown('<div class="v-label">EVIDENCE</div>', unsafe_allow_html=True)
         if ev:
             st.markdown('<div class="v-body">' + md_to_html(ev) + "</div>", unsafe_allow_html=True)
         for tbl in p.get("tables", []):
@@ -456,7 +436,7 @@ def render_answer(idx, msg):
 
     cits = citations_of(p)
     if cits:
-        label("Sources", "star")
+        st.markdown('<div class="v-label">SOURCES</div>', unsafe_allow_html=True)
         st.markdown("".join(
             '<span class="v-src"><b>' + str(i + 1) + "</b>" + html_mod.escape(c) + "</span>"
             for i, c in enumerate(cits)), unsafe_allow_html=True)
@@ -473,7 +453,7 @@ def render_answer(idx, msg):
                 if note:
                     st.caption("How it applies: " + note)
     elif p.get("search_cits"):
-        label("Sources", "star")
+        st.markdown('<div class="v-label">SOURCES</div>', unsafe_allow_html=True)
         for i, c in enumerate(p["search_cits"]):
             with st.expander("[" + str(i + 1) + "]  Policy source"):
                 st.markdown(c[:600])
@@ -481,7 +461,7 @@ def render_answer(idx, msg):
     if p.get("has_ring") and p.get("ring_data"):
         dot = build_dot(p["ring_data"])
         if dot:
-            label("Account graph", "star")
+            st.markdown('<div class="v-label">ACCOUNT GRAPH</div>', unsafe_allow_html=True)
             st.graphviz_chart(dot, use_container_width=True)
 
     conf = s.get("confidence", "")
@@ -504,11 +484,11 @@ def render_answer(idx, msg):
 
 
 st.markdown(
-    '<div class="v-band">' + logo_svg(52, "h")
-    + '<div class="v-txt"><div class="v-word">Vigil</div>'
-    '<div class="v-tagline">Risk, fraud and regulatory intelligence copilot</div></div>'
-    '<div class="v-chips"><span class="v-chip syn">Synthetic data</span>'
-    '<span class="v-chip hitl">Human-in-the-loop</span></div></div>',
+    '<div class="v-topbar">' + logo_svg(28, "h")
+    + '<div><div class="v-topbar-title">Vigil</div>'
+    '<div class="v-topbar-sub">Risk, fraud and regulatory intelligence</div></div>'
+    '<div class="v-topbar-chips"><span class="v-chip">Synthetic data</span>'
+    '<span class="v-chip">Human in the loop</span></div></div>',
     unsafe_allow_html=True,
 )
 
@@ -522,11 +502,11 @@ if not msgs:
     for row in range(3):
         c1, c2 = st.columns(2, gap="small")
         for col, i in ((c1, row * 2), (c2, row * 2 + 1)):
-            title, hint, icon, tint = CARDS[i]
+            title, hint = CARDS[i]
             with col:
                 st.markdown(
-                    '<div class="v-card t-' + tint + '"><div class="v-ico">' + icon + "</div>"
-                    '<div><div class="v-ct">' + title + '</div><div class="v-ch">' + hint + "</div></div></div>",
+                    '<div class="v-card">'
+                    '<div class="v-ct">' + title + '</div><div class="v-ch">' + hint + "</div></div>",
                     unsafe_allow_html=True,
                 )
                 if st.button("Ask \u2192", key="ex_" + str(i), use_container_width=True):
@@ -542,7 +522,7 @@ else:
             render_answer(idx, msg)
 
 st.markdown(
-    '<div class="v-brandfoot">Vigil - built on Snowflake Cortex (Agents, Analyst, Search)</div>',
+    '<div class="v-brandfoot">Vigil \u2014 built on Snowflake Cortex</div>',
     unsafe_allow_html=True,
 )
 
